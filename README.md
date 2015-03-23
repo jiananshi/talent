@@ -8,4 +8,4 @@ talent App
 2.引入mysql依赖 [node-mysql](https://www.npmjs.com/package/mysql)
 有关node.js 使用mysql的一篇技术[文章](http://blog.fens.me/nodejs-mysql-intro/)
 
-3.具体实现产考test.js中的示例代码，示例代码的sql文件在data目录中。
+3.具体实现参考test.js中的示例代码，示例代码的sql文件在data目录中。
