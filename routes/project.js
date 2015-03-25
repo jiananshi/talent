@@ -11,6 +11,10 @@ router.get('/', function (req, res) {
     var result = [];
     var token = req.query.token;
     var project;
+    var data = {
+        status: false,
+        message : ""
+    }
     var map = new hashMap();
     db.getConnection(function (err, conn) {
         if (err) console.log("POOL ==> " + err);
@@ -19,8 +23,8 @@ router.get('/', function (req, res) {
         'FROM project_user_info WHERE userToken = ' + token + ' ',function(err,rows){
             if(err){
                 console.log(err);
-                result = err;
-                res.send(false);//若有错误返回失败
+                data.message = err;
+                res.send(data);//若有错误返回失败
                 conn.release();
             }else{
                 for(var i in rows){
@@ -31,24 +35,32 @@ router.get('/', function (req, res) {
                 }
                 //取出所有项目信息
                 db.query('SELECT * FROM project_info',function(err,rows){
-                    for(var i in rows){
-                        //若以项目id为key 无法从map中取出对象 说明指定用户未报名该项目
-                        if(map.get(rows[i].projectId) ===  undefined){
-                            //新建project对象，用户状态为0，说明未报名
-                            project = new projectUserModel( rows[i].projectName,rows[i].categoryName,rows[i].creatorName,rows[i].people,
-                                rows[i].content,0,rows[i].projectStatus);
-                            map.set(rows[i].projectId, project);
+                    if(err){
+                        data.message = err;
+                        res.send(data);//若有错误返回失败
+                        conn.release();
+                    }else {
+                        for (var i in rows) {
+                            //若以项目id为key 无法从map中取出对象 说明指定用户未报名该项目
+                            if (map.get(rows[i].projectId) === undefined) {
+                                //新建project对象，用户状态为0，说明未报名
+                                project = new projectUserModel(rows[i].projectName, rows[i].categoryName, rows[i].creatorName, rows[i].people,
+                                    rows[i].content, 0, rows[i].projectStatus);
+                                map.set(rows[i].projectId, project);
+                            }
                         }
+                        map.forEach(function (value, key) {
+                            result.push(value);
+                        })
+                        res.send(result);
+                        conn.release();
                     }
-                    map.forEach(function(value,key){
-                        result.push(value);
-                    })
-                    res.send(result);
-                    conn.release();
                 })
 
             }
         });
     });
 });
+
+
 module.exports = router;
