@@ -1,8 +1,9 @@
 //包含指定user在一个项目中的状态
-module.exports= function(name,category,creator,people,content,status,projectStatus){
+module.exports = function(id,name,category,creator,people,content,status,projectStatus){
     //private
     var projectUser =
     {
+          id : 0,//项目的id
          name : "",//项目的名字
           category : "",//项目类别
          creator : "",//创建者的名字
@@ -12,6 +13,7 @@ module.exports= function(name,category,creator,people,content,status,projectStat
          projectStatus : 0 //项目的状态，0为进行中
     }
     //construct code
+    projectUser.id = id;
     projectUser.name = name;
     projectUser.category = category;
     projectUser.content = content;

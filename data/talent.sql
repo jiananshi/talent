@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-03-25 14:42:56
+Date: 2015-03-25 21:22:55
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -524,27 +524,28 @@ CREATE TABLE `project_member` (
   `project_member_id` int(255) NOT NULL auto_increment,
   `project_id` int(255) NOT NULL,
   `user_id` int(255) NOT NULL,
-  `project_member_role` int(255) NOT NULL COMMENT '学生和老师保存在同一张表中，1表示学生，2老师，3管理者',
-  `project_member_task` varchar(255) NOT NULL COMMENT '保存每个人在项目中的任务',
-  `project_member_opinion` text NOT NULL COMMENT '学生或老师的意见',
+  `project_member_role` int(255) NOT NULL default '1' COMMENT '学生和老师保存在同一张表中，1表示学生，2老师，3管理者',
+  `project_member_task` varchar(255) NOT NULL default '' COMMENT '保存每个人在项目中的任务',
+  `project_member_opinion` text COMMENT '学生或老师的意见',
   `project_member_status` int(255) NOT NULL default '0',
+  `project_application_reason` text,
   PRIMARY KEY  (`project_member_id`),
   KEY `project_id` (`project_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `project_member_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `project_member_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_member
 -- ----------------------------
-INSERT INTO project_member VALUES ('1', '1', '7', '1', 'xxxxxxx', 'xxxxx', '1');
-INSERT INTO project_member VALUES ('2', '1', '1', '2', 'xxx', 'xxxxxxxxxxx', '1');
-INSERT INTO project_member VALUES ('3', '1', '8', '1', 'xxxxxxx', '', '1');
-INSERT INTO project_member VALUES ('7', '3', '1', '2', '没有任务', '', '2');
-INSERT INTO project_member VALUES ('18', '3', '8', '1', '/', '', '2');
-INSERT INTO project_member VALUES ('20', '3', '7', '3', '没有任务', '', '2');
-INSERT INTO project_member VALUES ('21', '3', '10', '1', '没有任务', '', '2');
+INSERT INTO project_member VALUES ('1', '1', '7', '1', '没有任务', 'xxxxx', '1', null);
+INSERT INTO project_member VALUES ('2', '1', '1', '2', '没有任务', 'xxxxxxxxxxx', '1', null);
+INSERT INTO project_member VALUES ('3', '1', '8', '1', '没有任务', '', '1', null);
+INSERT INTO project_member VALUES ('7', '3', '1', '2', '没有任务', '', '2', null);
+INSERT INTO project_member VALUES ('18', '3', '8', '1', '没有任务', '', '2', null);
+INSERT INTO project_member VALUES ('20', '3', '7', '3', '没有任务', '', '2', null);
+INSERT INTO project_member VALUES ('21', '3', '10', '1', '没有任务', '', '2', null);
 
 -- ----------------------------
 -- Table structure for `project_period`
