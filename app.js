@@ -44,7 +44,7 @@ app.use(function(req,res,next){
 app.use('/', routes);
 app.use('/test', test);
 app.use('/project',project);
-app.use('/add-item',project);
+app.use('/application-item',project);
 app.use('/new',news);
 
 // catch 404 and forward to error handler

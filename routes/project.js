@@ -4,6 +4,7 @@ var projectUserModel = require('../model/projectUserModel');
 var hashMap = require('hashmap').HashMap;
 
 //得到所有项目的信息
+
 router.get('/', function (req, res) {
     var db = req.db;
     var result = [];
@@ -99,5 +100,34 @@ router.post('/', function (req, res) {
             }
         })
     })
+})
+
+router.get('/get-project',function(req,res){
+    var db = req.db;
+    var token = req.query.token;
+    var id = req.query.id;
+    var project;
+    var data = {
+        status: false,
+        message : ""
+    }
+    db.getConnection(function (err, conn) {
+        if (err) console.log("POOL ==> " + err);
+        //从project_user_info视图中获取user和project的信息，user未报名的项目不存储在数据库中
+        db.query('SELECT projectId,projectName,categoryName,creatorName,people,content,projectStatus,memberStatus ' +
+        'FROM project_user_info WHERE userToken = ' + token + ' AND  projectId = ' + id + '',function(err,rows){
+            if(err){
+                console.log(err);
+                data.message = err;
+                res.send(data);//若有错误返回失败
+                conn.release();
+            }else {
+                project = new projectUserModel(rows[0].projectId,rows[0].projectName, rows[0].categoryName, rows[0].creatorName, rows[0].people,
+                    rows[0].content, rows[0].memberStatus, rows[0].projectStatus);
+                res.send(project);
+                conn.release();
+            }
+        })
+    });
 })
 module.exports = router;
