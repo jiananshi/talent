@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-03-25 21:22:55
+Date: 2015-04-03 11:25:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,12 +24,17 @@ CREATE TABLE `competition` (
   `competition_category_id` int(255) NOT NULL,
   `createtime` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `content` text NOT NULL,
+  `competition_name` varchar(255) NOT NULL default '',
+  `max_people` int(11) NOT NULL default '0',
+  `endTime` timestamp NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='竞赛通知';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='竞赛通知';
 
 -- ----------------------------
 -- Records of competition
 -- ----------------------------
+INSERT INTO competition VALUES ('1', '1', '0', '2015-04-03 10:48:20', '上海市全国大学生信息安全竞赛，旨在促进大学生对信息安全的兴趣。主办方为教育部，希望大家可以积极参赛', '第七届全国大学生信息安全竞赛', '5', '2015-04-08 11:00:30');
+INSERT INTO competition VALUES ('2', '7', '0', '2015-04-03 10:49:42', '2015年大夏杯，属于校级比赛，分为应用型和理论型', '2015年大夏杯', '4', '2015-07-09 11:00:40');
 
 -- ----------------------------
 -- Table structure for `competition_enroll`
@@ -534,7 +539,7 @@ CREATE TABLE `project_member` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `project_member_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `project_member_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_member
@@ -546,6 +551,7 @@ INSERT INTO project_member VALUES ('7', '3', '1', '2', '没有任务', '', '2', 
 INSERT INTO project_member VALUES ('18', '3', '8', '1', '没有任务', '', '2', null);
 INSERT INTO project_member VALUES ('20', '3', '7', '3', '没有任务', '', '2', null);
 INSERT INTO project_member VALUES ('21', '3', '10', '1', '没有任务', '', '2', null);
+INSERT INTO project_member VALUES ('22', '4', '10', '1', '', null, '1', ' 我会java');
 
 -- ----------------------------
 -- Table structure for `project_period`
@@ -833,6 +839,12 @@ INSERT INTO user_to_role VALUES ('32', '8', '4');
 INSERT INTO user_to_role VALUES ('33', '8', '5');
 INSERT INTO user_to_role VALUES ('34', '8', '6');
 INSERT INTO user_to_role VALUES ('35', '8', '7');
+
+-- ----------------------------
+-- View structure for `competition_user`
+-- ----------------------------
+DROP VIEW IF EXISTS `competition_user`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `competition_user` AS select `competition`.`id` AS `id`,`competition`.`createtime` AS `createTime`,`competition`.`content` AS `content`,`competition`.`competition_name` AS `name`,`competition`.`max_people` AS `people`,`user`.`user_name` AS `creator`,`competition`.`endTime` AS `endTime` from (`competition` join `user`) where (`competition`.`creator_id` = `user`.`user_id`);
 
 -- ----------------------------
 -- View structure for `project_info`

@@ -19,6 +19,7 @@ var routes = require('./routes/index');
 var test = require('./routes/test');
 var project = require('./routes/project');
 var news = require('./routes/news');
+var competition = require('./routes/competition');
 
 var app = express();
 
@@ -46,6 +47,7 @@ app.use('/test', test);
 app.use('/project',project);
 app.use('/application-item',project);
 app.use('/new',news);
+app.use('/competition', competition);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
