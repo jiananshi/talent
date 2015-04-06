@@ -11,24 +11,29 @@ router.get('/',function(req,res) {
         status: false,
         message: ""
     }
-    var name = req.name;
-    var password = req.password;
+    var name = req.query.name;
+    var password = req.query.password;
     var token =common.sha1(name + common.random + password + new Date());
-    db.connection(function(err,conn){
+    db.getConnection(function(err,conn){
         if(err){
             data.message = err;
             response.send(data);
         }else{
-            db.query('UPDATE user set user_token = '+ token +' where user_name = '+ name+' and user_password = '+ password+' ',function(err,row){
+            db.query('UPDATE user set user_token =" '+ token +'" where user_name = "'+ name+'" and user_password ="'+ password+'" ',function(err,row){
                     if(err){
                         data.message = err;
                         response.send(data);
                     }else{
-                        console.log(row);
-                        res.send(row);
+                        if(row.affectedRows === 1){
+                            res.send(token);
+                        }else{
+                            data.message = "用户名或密码不正确";
+                            res.send(data);
+                        }
                     }
             })
             conn.release();
         }
     })
 })
+module.exports = router;
