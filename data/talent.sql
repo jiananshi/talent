@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-04-03 11:25:37
+Date: 2015-04-09 21:12:16
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -41,15 +41,26 @@ INSERT INTO competition VALUES ('2', '7', '0', '2015-04-03 10:49:42', '2015年�
 -- ----------------------------
 DROP TABLE IF EXISTS `competition_enroll`;
 CREATE TABLE `competition_enroll` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL auto_increment,
   `competition_id` int(11) NOT NULL,
   `competition_enroll_foo_id` int(11) NOT NULL,
-  `createtime` timestamp NOT NULL default CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='竞赛报名表';
+  `createtime` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='竞赛报名表';
 
 -- ----------------------------
 -- Records of competition_enroll
 -- ----------------------------
+INSERT INTO competition_enroll VALUES ('11', '1', '10', '2015-04-09 20:40:27');
+INSERT INTO competition_enroll VALUES ('12', '1', '10', '2015-04-09 20:43:27');
+INSERT INTO competition_enroll VALUES ('13', '1', '10', '2015-04-09 20:54:05');
+INSERT INTO competition_enroll VALUES ('14', '1', '10', '2015-04-09 20:54:07');
+INSERT INTO competition_enroll VALUES ('15', '1', '10', '2015-04-09 20:54:08');
+INSERT INTO competition_enroll VALUES ('16', '1', '10', '2015-04-09 20:54:09');
+INSERT INTO competition_enroll VALUES ('17', '1', '10', '2015-04-09 20:55:27');
+INSERT INTO competition_enroll VALUES ('18', '1', '10', '2015-04-09 20:55:28');
+INSERT INTO competition_enroll VALUES ('19', '1', '10', '2015-04-09 20:59:28');
+INSERT INTO competition_enroll VALUES ('20', '1', '10', '2015-04-09 21:11:48');
 
 -- ----------------------------
 -- Table structure for `competition_to_project`
@@ -693,13 +704,15 @@ CREATE TABLE `test` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of test
 -- ----------------------------
-INSERT INTO test VALUES ('1', 'xiaoming\n');
+INSERT INTO test VALUES ('1', 'dyg');
 INSERT INTO test VALUES ('2', 'xiaowang\n');
+INSERT INTO test VALUES ('3', 'asd');
+INSERT INTO test VALUES ('4', 'asd');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -742,7 +755,7 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO user VALUES ('1', '3', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'dyg', 'axt', 'xxx', '2013', 'xxx', 'xxx', 'xxx', 'xxx', 'xxx', 'v', 'xxx', 'xxx', 'xxx', 'xxx', '1', '0');
+INSERT INTO user VALUES ('1', '3', '1', '1', '1', '1', 'dyg', 'axt', 'xxx', '2013', 'xxx', 'xxx', 'xxx', 'xxx', 'xxx', 'v', 'xxx', 'xxx', 'xxx', 'xxx', ' f6df7b4bfcd45aa11a24691cb8f6aba002cf659e', '0');
 INSERT INTO user VALUES ('7', '1', '1', '1', '1', 'df399330d331a0c6a2f8e1056a9eeb66ea904027', 'shy', 'shy', '10132510262', '2013', '222', '', '', '', '', '333', '', '', '444', '555', '7', '0');
 INSERT INTO user VALUES ('8', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'burgess', 'ymy', '10132510232', '2013', '123', '', '', '', '', '123', '', '', '123', '123', '8', '0');
 INSERT INTO user VALUES ('10', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'null', 'jwm', '10132510246', '2013', 'xxxx', '', '', '', '', 'xxx', '', '', 'xxx', 'xxx', '10', '0');
@@ -841,10 +854,10 @@ INSERT INTO user_to_role VALUES ('34', '8', '6');
 INSERT INTO user_to_role VALUES ('35', '8', '7');
 
 -- ----------------------------
--- View structure for `competition_user`
+-- View structure for `competition_info`
 -- ----------------------------
-DROP VIEW IF EXISTS `competition_user`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `competition_user` AS select `competition`.`id` AS `id`,`competition`.`createtime` AS `createTime`,`competition`.`content` AS `content`,`competition`.`competition_name` AS `name`,`competition`.`max_people` AS `people`,`user`.`user_name` AS `creator`,`competition`.`endTime` AS `endTime` from (`competition` join `user`) where (`competition`.`creator_id` = `user`.`user_id`);
+DROP VIEW IF EXISTS `competition_info`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `competition_info` AS select `competition`.`id` AS `id`,`competition`.`createtime` AS `createTime`,`competition`.`content` AS `content`,`competition`.`competition_name` AS `name`,`competition`.`max_people` AS `people`,`user`.`user_name` AS `creator`,`competition`.`endTime` AS `endTime` from (`competition` join `user`) where (`competition`.`creator_id` = `user`.`user_id`);
 
 -- ----------------------------
 -- View structure for `project_info`
