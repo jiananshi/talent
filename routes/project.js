@@ -1,76 +1,73 @@
 var express = require('express');
 var router = express.Router();
-var projectUserModel = require('../model/projectUserModel');
-var hashMap = require('hashmap').HashMap;
+var projectModel = require('../model/projectUserModel');
 
 //得到所有项目的信息
-
 router.get('/', function (req, res) {
     var db = req.db;
     var result = [];
-    var token = req.query.token;
     var project;
     var data = {
         status: false,
         message : ""
     }
-    var map = new hashMap();
     db.getConnection(function (err, conn) {
         if (err) console.log("POOL ==> " + err);
-
-        db.query('SELECT * FROM user WHERE user_Token = '+token+'',function(err,row){
-            if(row.length == 0){
-                data.message = "重新登录" ;
-                res.send(data);
+        //取出所有项目信息
+        db.query('SELECT * FROM project_info',function(err,rows){
+            if(err){
+                data.message = err;
+                res.send(data);//若有错误返回失败
                 conn.release();
-            }else{
-                //从project_user_info视图中获取user和project的信息，user未报名的项目不存储在数据库中
-                db.query('SELECT projectId,projectName,categoryName,creatorName,people,content,projectStatus,memberStatus ' +
-                'FROM project_user_info WHERE userToken = ' + token + ' ',function(err,rows){
-                    if(err){
-                        console.log(err);
-                        data.message = err;
-                        res.send(data);//若有错误返回失败
-                        conn.release();
-                    }else{
-                        for(var i in rows){
-                            project= new projectUserModel( rows[i].projectId,rows[i].projectName,rows[i].categoryName,rows[i].creatorName,rows[i].people,
-                                rows[i].content,rows[i].memberStatus,rows[i].projectStatus);
-                            //把取出结果以projectId为key 加入hashmap中
-                            map.set(rows[i].projectId, project);
-                        }
-                        //取出所有项目信息
-                        db.query('SELECT * FROM project_info',function(err,rows){
-                            if(err){
-                                data.message = err;
-                                res.send(data);//若有错误返回失败
-                                conn.release();
-                            }else {
-                                for (var i in rows) {
-                                    //若以项目id为key 无法从map中取出对象 说明指定用户未报名该项目
-                                    if (map.get(rows[i].projectId) === undefined) {
-                                        //新建project对象，用户状态为0，说明未报名
-                                        project = new projectUserModel(rows[i].projectId,rows[i].projectName, rows[i].categoryName, rows[i].creatorName, rows[i].people,
-                                            rows[i].content, 0, rows[i].projectStatus);
-                                        map.set(rows[i].projectId, project);
-                                    }
-                                }
-                                //将hashmap中的所有值加入result数组中
-                                map.forEach(function (value, key) {
-                                    result.push(value);
-                                })
-                                res.send(result);
-                                conn.release();
-                            }
-                        })
-
+            }else {
+                for (var i in rows) {
+                        //新建project对象
+                        project = new projectModel(rows[i].projectId,rows[i].projectName, rows[i].categoryName, rows[i].creatorName, rows[i].people,
+                            rows[i].content,rows[i].projectStatus);
+                        result.push(project);
                     }
-                });
-            }
+                res.send(result);
+                conn.release();
+                }
         })
-
-    });
+    })
 });
+
+//得到用户在指定项目中的状态（0为未报名，1为审核中，2为审核通过，3为审核未通过）
+router.get('/project-status',function(req,res){
+    var db = req.db;
+    var projectId = req.query.id;
+    var userToken = req.query.token;
+    console.log(projectId);
+    console.log(userToken);
+    var data = {
+        status : false,
+        message : ""
+    }
+    var result = {
+        status : 0
+    }
+    db.getConnection(function(err,conn){
+       if(err){
+           data.message = err;
+           res.send(data);
+       }else {
+           db.query('select * from user WHERE user_token = ' + userToken + '', function (err, row) {
+               if (row.length == 0) {//说明用户未登录
+                   data.message = "请登录";
+                   res.send(data);
+               }else{
+                   var userId = row[0].user_id;
+                   db.query('select project_member_status as status from project_member where user_id = '+userId+' and project_id = '+projectId+' ', function(err,row){
+                       result.status = (row.length == 0) ? 0 : row[0].status;
+                       res.send(result);
+                   })
+               }
+               conn.release();
+           })
+       }
+    })
+})
 
 //用于处理用户申请加入指定项目
 router.post('/', function (req, res) {
