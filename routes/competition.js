@@ -5,6 +5,7 @@ var competitionModel = require('../model/competitionModel')
 //得到所有竞赛的信息(包括id，name，creator，createtime，endtime, people, content)
 router.get('/', function (req, res) {
     var db = req.db;
+
     var data = {
         status : false,
         message : ""
