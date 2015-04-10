@@ -154,4 +154,50 @@ router.get('/get-project',function(req,res){
         })
     });
 })
+
+//用户发起新项目
+router.post('/add-item',function(req,res){
+    var db = req.db;
+    var project = new projectModel(0,req.query.name,req.query.category,0,req.query.people,req.query.content,0);
+    var userToken = req.query.token;
+    var data = {
+        status : false,
+        message :""
+    }
+    db.getConnection(function (err, conn) {
+        if (err) console.log("POOL ==> " + err);
+        //根据token选出userId
+        db.query('SELECT user_id FROM user WHERE user_token ="' + userToken + '"', function (err, rows) {
+            if (err) {
+                data.message = err;
+                res.send(data);//若有错误返回false
+                conn.release();
+            }else {
+                if(rows.length == 0){
+                    data.message = "请登录";
+                    res.send(data);
+                    conn.release();
+                }else{
+                    var userId = rows[0].user_id;
+                    project.setCreator(userId);
+                    db.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_describe,project_signup_max) ' +
+                    'VALUES ('+ project.getCategory()+','+project.getProjectStatus()+','+project.getCreator()+',"'+project.getName()+'",' +
+                    '"'+project.getContent()+'",'+project.getPeople()+')',function(err , row){
+                        if(err){
+                            console.log(err);
+                            data.message = err;
+                            res.send(data);//若有错误返回false
+                            conn.release();
+                        }else{
+                            data.message = (row.affectedRows == 1 )? "" : "插入失败";
+                            data.status = (row.affectedRows == 1) ? true : false;
+                            res.send(data);//若有错误返回false
+                            conn.release();
+                        }
+                    })
+                }
+            }
+        })
+    })
+})
 module.exports = router;

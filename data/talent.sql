@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-04-09 21:12:16
+Date: 2015-04-10 23:30:00
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -479,31 +479,31 @@ CREATE TABLE `project` (
   `project_status` int(11) NOT NULL,
   `project_createtime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `project_creator_id` int(255) NOT NULL,
-  `project_name` varchar(50) NOT NULL,
-  `project_start` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `project_end` timestamp NOT NULL default '0000-00-00 00:00:00',
-  `project_researchobject` int(11) NOT NULL COMMENT '项目性质',
-  `project_source` int(255) NOT NULL COMMENT '选题来源',
-  `project_subject` varchar(255) NOT NULL COMMENT '学科类别',
-  `project_aid` varchar(255) NOT NULL COMMENT '受资助情况',
-  `project_background` text NOT NULL COMMENT '立项背景和依据',
-  `project_describe` text NOT NULL COMMENT '研究内容、拟解决的关键问题、研究方法',
-  `project_innovation` text NOT NULL COMMENT '项目特色与创新点',
-  `project_plan` text NOT NULL COMMENT '研究进度与计划',
-  `project_prospect` text NOT NULL COMMENT '预期成果',
-  `project_budget` text NOT NULL COMMENT '经费预算',
-  `project_resourcerequired` text NOT NULL COMMENT '所需资源',
-  `project_teacheropinion` text NOT NULL COMMENT '教师意见',
-  `project_departmentopinion` text NOT NULL COMMENT '院系专家评审组意见',
-  `project_institutionopinion` text NOT NULL COMMENT '学校专家评审组意见',
-  `project_summary` varchar(255) default NULL COMMENT '项目概述，用于对外展示',
-  `project_signup_max` int(255) default NULL COMMENT '项目报名人数上限',
-  `project_grouptype` varchar(255) default NULL COMMENT '项目组类型',
+  `project_name` varchar(50) default '',
+  `project_start` timestamp NULL default '0000-00-00 00:00:00',
+  `project_end` timestamp NULL default '0000-00-00 00:00:00',
+  `project_researchobject` int(11) default NULL COMMENT '项目性质',
+  `project_source` int(255) default NULL COMMENT '选题来源',
+  `project_subject` varchar(255) default '' COMMENT '学科类别',
+  `project_aid` varchar(255) default '' COMMENT '受资助情况',
+  `project_background` text COMMENT '立项背景和依据',
+  `project_describe` text COMMENT '研究内容、拟解决的关键问题、研究方法',
+  `project_innovation` text COMMENT '项目特色与创新点',
+  `project_plan` text COMMENT '研究进度与计划',
+  `project_prospect` text COMMENT '预期成果',
+  `project_budget` text COMMENT '经费预算',
+  `project_resourcerequired` text COMMENT '所需资源',
+  `project_teacheropinion` text COMMENT '教师意见',
+  `project_departmentopinion` text COMMENT '院系专家评审组意见',
+  `project_institutionopinion` text COMMENT '学校专家评审组意见',
+  `project_summary` varchar(255) default '' COMMENT '项目概述，用于对外展示',
+  `project_signup_max` int(255) default '0' COMMENT '项目报名人数上限',
+  `project_grouptype` varchar(255) default '' COMMENT '项目组类型',
   PRIMARY KEY  (`project_id`),
   KEY `project_creator_id` (`project_creator_id`),
   KEY `project_category_id` (`project_category_id`),
   CONSTRAINT `project_ibfk_2` FOREIGN KEY (`project_category_id`) REFERENCES `project_category` (`project_category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project
@@ -512,6 +512,7 @@ INSERT INTO project VALUES ('1', '2', '0', '2015-03-25 14:41:16', '7', '智能�
 INSERT INTO project VALUES ('2', '2', '0', '2015-03-25 14:41:50', '8', '项目测试1', '2015-02-09 00:00:00', '2015-02-23 00:00:00', '2', '2', '测试', '测试', '测试', '测试项目1', '测试', '测试', '测试', '测试', '测试', '测试', '测试', '测试', null, '4', '测试');
 INSERT INTO project VALUES ('3', '2', '0', '2015-03-25 14:41:45', '8', '项目测试2', '2015-02-16 00:00:00', '2015-02-27 00:00:00', '2', '2', '测试的学科', '无', '测试背景', '测试项目2', '测试创新点', '测试进展', '测试预期', '100w', '测试资源', '同意', '同意', '同意', null, '5', '测试的类型');
 INSERT INTO project VALUES ('4', '2', '0', '2015-03-25 14:41:58', '10', '科创app', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0', '0', '', '', '', '我们的毕设', '', '', '', '', '', '', '', '', null, '6', null);
+INSERT INTO project VALUES ('5', '1', '0', '2015-04-10 23:25:27', '10', 'test', '0000-00-00 00:00:00', '0000-00-00 00:00:00', null, null, '', '', null, 'test', null, null, null, null, null, null, null, null, '', '5', '');
 
 -- ----------------------------
 -- Table structure for `project_category`
@@ -550,7 +551,7 @@ CREATE TABLE `project_member` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `project_member_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `project_member_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_member
@@ -561,8 +562,9 @@ INSERT INTO project_member VALUES ('3', '1', '8', '1', '没有任务', '', '1', 
 INSERT INTO project_member VALUES ('7', '3', '1', '2', '没有任务', '', '2', null);
 INSERT INTO project_member VALUES ('18', '3', '8', '1', '没有任务', '', '2', null);
 INSERT INTO project_member VALUES ('20', '3', '7', '3', '没有任务', '', '2', null);
-INSERT INTO project_member VALUES ('21', '3', '10', '1', '没有任务', '', '2', null);
 INSERT INTO project_member VALUES ('22', '4', '10', '1', '', null, '1', ' 我会java');
+INSERT INTO project_member VALUES ('23', '3', '10', '1', '', null, '1', ' undefined');
+INSERT INTO project_member VALUES ('24', '3', '10', '1', '', null, '1', ' undefined');
 
 -- ----------------------------
 -- Table structure for `project_period`
@@ -755,7 +757,7 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO user VALUES ('1', '3', '1', '1', '1', '1', 'dyg', 'axt', 'xxx', '2013', 'xxx', 'xxx', 'xxx', 'xxx', 'xxx', 'v', 'xxx', 'xxx', 'xxx', 'xxx', ' f6df7b4bfcd45aa11a24691cb8f6aba002cf659e', '0');
+INSERT INTO user VALUES ('1', '3', '1', '1', '1', '1', 'dyg', 'axt', 'xxx', '2013', 'xxx', 'xxx', 'xxx', 'xxx', 'xxx', 'v', 'xxx', 'xxx', 'xxx', 'xxx', ' 4a79bbdb078ab6f3e317b6c93ef8ae68e4964f9d', '0');
 INSERT INTO user VALUES ('7', '1', '1', '1', '1', 'df399330d331a0c6a2f8e1056a9eeb66ea904027', 'shy', 'shy', '10132510262', '2013', '222', '', '', '', '', '333', '', '', '444', '555', '7', '0');
 INSERT INTO user VALUES ('8', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'burgess', 'ymy', '10132510232', '2013', '123', '', '', '', '', '123', '', '', '123', '123', '8', '0');
 INSERT INTO user VALUES ('10', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'null', 'jwm', '10132510246', '2013', 'xxxx', '', '', '', '', 'xxx', '', '', 'xxx', 'xxx', '10', '0');
