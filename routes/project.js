@@ -115,6 +115,7 @@ router.post('/', function (req, res) {
     })
 })
 
+//获取指定项目详情
 router.get('/get-project',function(req,res){
     var db = req.db;
     var userToken = req.query.token;
