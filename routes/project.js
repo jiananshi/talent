@@ -3,7 +3,7 @@ var router = express.Router();
 var common = require('../model/common');
 var projectModel = require('../model/projectModel');
 
-//得到所有项目的信息
+//得到所有状态为发布中的项目的信息
 router.get('/', function (req, res) {
     var db = req.db;
     var result = [];
@@ -15,7 +15,7 @@ router.get('/', function (req, res) {
     db.getConnection(function (err, conn) {
         if (err) console.log("POOL ==> " + err);
         //取出所有项目信息
-        db.query('SELECT * FROM project_info',function(err,rows){
+        db.query('SELECT * FROM project_info WHERE projectStatus = 0',function(err,rows){
             if(err){
                 data.message = err;
                 res.send(data);//若有错误返回失败
