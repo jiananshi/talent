@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
         db.query('SELECT * FROM project_info WHERE projectStatus = 0',function(err,rows){
             if(err){
                 data.message = err;
-                res.send(data);//若有错误返回失败
+                res.send({'data' : data});//若有错误返回失败
                 conn.release();
             }else {
                 for (var i in rows) {
@@ -49,16 +49,16 @@ router.get('/project-status',function(req,res){
     db.getConnection(function(err,conn){
        if(err){
            data.message = err;
-           res.send(data);
+           res.send({'data' : data});
        }else {
            db.query('select * from user WHERE user_token = ' + userToken + '', function (err, row) {
                if(err){
                    data.message = err;
-                   res.send(data);
+                   res.send({'data' : data});
                }else {
                    if (row.length == 0) {//说明用户未登录
                        data.message = "请登录";
-                       res.send(data);
+                       res.send({'data' : data});
                    } else {
                        var userId = row[0].user_id;
                        db.query('select project_member_status as status from project_member where user_id = ' + userId + ' and project_id = ' + projectId + ' ', function (err, row) {
@@ -90,13 +90,13 @@ router.post('/', function (req, res) {
         db.query('SELECT user_id FROM user WHERE user_token = ' + token + '',function(err,rows){
             if(err){
                 data.message = err;
-                res.send(data);//若有错误返回false
+                res.send({'data' : data});//若有错误返回false
                 conn.release();
             }else{
                 userId = (rows.length == 0) ? -1 :rows[0].user_id;
                 if(userId == -1){
                     data.message = "请登录";
-                    res.send(data);
+                    res.send({'data' : data});
                 }else {
                     //插入记录 ，默认用户角色为1（学生），用户状态为1（审核中）
                     db.query('INSERT INTO  project_member (project_id,user_id,project_member_role,project_member_status,project_application_reason)' +
@@ -106,7 +106,7 @@ router.post('/', function (req, res) {
                         } else {
                             data.status = (rows.affectedRows == 1)? true :false;
                         }
-                        res.send(data);
+                        res.send({'data' : data});
                         conn.release();
                     });
                 }

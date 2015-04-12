@@ -14,14 +14,14 @@ router.get('/', function (req, res) {
         if(err){
             console.log(err);
             data.message = err;
-            res.send(data);
+            res.send({'data' : data});
         }
         db.query("SELECT news_id as id, news_title as name,news_show_picture as imgUrl,news_content as content,news_createtime as time,news_readtimes as readTimes " +
         "From news WHERE news_status = 0", function(err,rows){
             if(err){
                 console.log(err);
                 data.message = err;
-                res.send(data);
+                res.send({'data' : data});
                 conn.release();
             }else{
                 for(var i in rows){

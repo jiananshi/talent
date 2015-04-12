@@ -15,12 +15,12 @@ router.get('/',function(req,res){
     db.getConnection(function(err ,conn){
         if(err){
             data.message = err;
-            res.send(data);
+            res.send({'data': data});
         }else{
             db.query('SELECT project_category_name as category FROM project_category',function(err,row){
                 if(err){
                     data.message = err;
-                    res.send(data);
+                    res.send({'data': data});
                 }else{
                     for(var i in row){
                         result.push(row[i].category);
