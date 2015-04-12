@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var common = require('../model/common');
 var projectModel = require('../model/projectModel');
+var category = require('../model/category');
 
 //得到所有状态为发布中的项目的信息
 router.get('/', function (req, res) {
@@ -199,6 +200,38 @@ router.post('/add-item',function(req,res){
                 }
             }
         })
+    })
+})
+
+//获取所有的分类名字
+router.get('/project-category',function(req,res){
+    var db = req.db;
+    var data = {
+        status : false,
+        message : ""
+    }
+
+    var result = [];
+    db.getConnection(function(err ,conn){
+        if(err){
+            data.message = err;
+            res.send({'data': data});
+        }else{
+            db.query('SELECT project_category_id as id,project_category_name as name FROM project_category',function(err,row){
+                if(err){
+                    data.message = err;
+                    res.send({'data': data});
+                }else{
+                    for(var i in row){
+                        var cate = new category(row[i].id,row[i].name);
+                        console.log(cate);
+                        result.push(cate);
+                    }
+                    res.send(result);
+                }
+                conn.release();
+            })
+        }
     })
 })
 module.exports = router;
