@@ -76,5 +76,52 @@ router.post('/application-competition', function (req, res) {
 
 });
 
+//获取单个竞赛的信息
+router.get('/get-competition',function(req,res){
+    var db = req.db;
+    var data = {
+        status : false,
+        message : ""
+    };
+    var competition;
+    var token = req.query.token;
+    var id = req.query.id;
+    db.getConnection(function(err,conn){
+        if(err){
+            data.message = err;
+            res.send(data);
+        }else{
+            db.query('SELECT * FROM user WHERE user_token = '+token+'',function(err,row){
+                if(err){
+                    data.message = err;
+                    res.send({'data':data});
+                    conn.release();
+                }else {
+                    if (row.length == 0) {
+                        data.message = "请登录";
+                        res.send({'data': data});
+                        conn.release();
+                    } else {
+                        db.query('select id, name, createTime, endTime, people , content, creator from competition_info where id = '+id+' ', function (err, row) {
+                            if (err) {
+                                data.message = err;
+                                res.send({'data': data});
+                                conn.release();
+                            } else {
+                                console.log(row);
+                                console.log("asdasd");
+                                competition = new competitionModel(row[0].id, row[0].name, row[0].creator, row[0].content, row[0].createTime, row[0].endTime, row[0].people);
+                                res.send(competition);
+                                conn.release();
+                            }
+                        })
+                    }
+                }
+
+            })
+        }
+    })
+
+})
 module.exports = router;
 
