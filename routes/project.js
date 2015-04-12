@@ -234,4 +234,52 @@ router.get('/project-category',function(req,res){
         }
     })
 })
+
+//修改项目的状态
+router.post('/change-project',function(req,res){
+    var db = req.db;
+    var token = req.query.token;
+    var id = req.query.id;
+    var projectStatus = req.query.status;
+    var data = {
+        status : false,
+        message : ""
+    }
+    db.getConnection(function(err,conn){
+        if(err){
+            data.message = err;
+            res.send({'data':data});
+        }else{
+            db.query('SELECT * FROM user WHERE user_token = '+token+'',function(err,row){
+                if(err){
+                    data.message = err;
+                    res.send({'data':data});
+                    conn.release();
+                }else{
+                   if(row.length == 0){
+                       data.message = "请登录";
+                       res.send({'data':data});
+                       conn.release();
+                   }else{
+                       db.query('UPDATE project SET project_status = '+projectStatus+' WHERE project_id = '+id+'',function(err,row){
+                           if(err){
+                               data.message = err;
+                               res.send({'data':data});
+                               conn.release();
+                           }else{
+                               console.log("asd")
+                               data.message = (row.affectedRows == 1)?"修改成功":"修改失败";
+                               data.status = (row.affectedRows ==1)?true:false;
+                               res.send({'data': data});
+                               conn.release();
+                           }
+                       })
+                   }
+                }
+            })
+
+        }
+    })
+
+})
 module.exports = router;
