@@ -4,8 +4,40 @@ var common = require('../model/common');
 var projectModel = require('../model/projectModel');
 var category = require('../model/category');
 
+function validToken(req, res, next){
+    var db = req.db;
+    var userToken = req.query.token;
+    db.getConnection(function(err,conn){
+        if(err){
+            sendData(req,res,next,conn,err);
+        }else{
+            db.query('SELECT * FROM user WHERE user_token = '+userToken+'',function(err,row){
+                if(err){
+                    sendData(req,res,next,conn,err);
+                }else{
+                    if(row.length == 0){
+                        sendData(req,res,next,conn,"请登录");
+                    }else{
+                        next();
+                    }
+                }
+            })
+        }
+    })
+}
+//出错时返回一个data对象
+function sendData(req,res,next ,conn,message){
+    var data = {
+        message : "", //出错信息
+        status : false //状态
+    }
+    data.message = message;
+    conn.release();
+    res.send({"data" : data});
+
+}
 //得到所有状态为发布中的项目的信息
-router.get('/', function (req, res) {
+router.get('/', function (req, res,next) {
     var db = req.db;
     var result = [];
     var project;
@@ -14,13 +46,11 @@ router.get('/', function (req, res) {
         message : ""
     }
     db.getConnection(function (err, conn) {
-        if (err) console.log("POOL ==> " + err);
+        if (err)  sendData(req,res,next,conn,err);
         //取出所有项目信息
         db.query('SELECT * FROM project_info WHERE projectStatus = 0',function(err,rows){
             if(err){
-                data.message = err;
-                res.send({'data' : data});//若有错误返回失败
-                conn.release();
+                sendData(req,res,next,conn,err);
             }else {
                 for (var i in rows) {
                         //新建project对象
@@ -36,7 +66,7 @@ router.get('/', function (req, res) {
 });
 
 //得到用户在指定项目中的状态（0为未报名，1为审核中，2为审核通过，3为审核未通过）
-router.get('/project-status',function(req,res){
+router.get('/project-status' ,function(req,res,next){
     var db = req.db;
     var projectId = req.query.id;
     var userToken = req.query.token;
@@ -49,17 +79,14 @@ router.get('/project-status',function(req,res){
     }
     db.getConnection(function(err,conn){
        if(err){
-           data.message = err;
-           res.send({'data' : data});
+           sendData(req,res,next,conn,err);
        }else {
            db.query('select * from user WHERE user_token = ' + userToken + '', function (err, row) {
                if(err){
-                   data.message = err;
-                   res.send({'data' : data});
+                   sendData(req,res,next,conn,err);
                }else {
                    if (row.length == 0) {//说明用户未登录
-                       data.message = "请登录";
-                       res.send({'data' : data});
+                       sendData(req,res,next,conn,"请登录");
                    } else {
                        var userId = row[0].user_id;
                        db.query('select project_member_status as status from project_member where user_id = ' + userId + ' and project_id = ' + projectId + ' ', function (err, row) {
@@ -86,29 +113,26 @@ router.post('/', function (req, res) {
         message : ""
     }
     db.getConnection(function (err, conn) {
-        if (err) console.log("POOL ==> " + err);
+        if (err)  sendData(req,res,next,conn,err);
         //根据token选出userId
         db.query('SELECT user_id FROM user WHERE user_token = ' + token + '',function(err,rows){
             if(err){
-                data.message = err;
-                res.send({'data' : data});//若有错误返回false
-                conn.release();
+                sendData(req,res,next,conn,err);
             }else{
                 userId = (rows.length == 0) ? -1 :rows[0].user_id;
                 if(userId == -1){
-                    data.message = "请登录";
-                    res.send({'data' : data});
+                    sendData(req,res,next,conn,"请登录");
                 }else {
                     //插入记录 ，默认用户角色为1（学生），用户状态为1（审核中）
                     db.query('INSERT INTO  project_member (project_id,user_id,project_member_role,project_member_status,project_application_reason)' +
                     ' VALUES (' + id + ',' + userId + ', 1 , 1, " ' + applicationReason + '");', function (err, rows) {
                         if (err) {
-                            data.message = err;
+                            sendData(req,res,next,conn,err);
                         } else {
                             data.status = (rows.affectedRows == 1)? true :false;
+                            res.send({'data' : data});
+                            conn.release();
                         }
-                        res.send({'data' : data});
-                        conn.release();
                     });
                 }
             }
@@ -117,7 +141,7 @@ router.post('/', function (req, res) {
 })
 
 //获取指定项目详情
-router.get('/get-project',function(req,res){
+router.get('/get-project',validToken, function(req,res){
     var db = req.db;
     var userToken = req.query.token;
     var id = req.query.id;
@@ -127,34 +151,21 @@ router.get('/get-project',function(req,res){
         message : ""
     }
     db.getConnection(function (err, conn) {
-        if (err) console.log("POOL ==> " + err);
-        db.query('select * from user WHERE user_token = ' + userToken + '', function (err, row) {
-            if(err){
-                data.message = err;
-                res.send(data);
-            }else {
-                if (row.length == 0) {//说明用户未登录
-                    data.message = "请登录";
-                    res.send(data);
-                }else {
-                    db.query('SELECT projectId,projectName,categoryName,creatorName,people,content,projectStatus,memberStatus ' +
-                    'FROM project_user_info WHERE  projectId = ' + id + '', function (err, rows) {
-                        if (err) {
-                            console.log(err);
-                            data.message = err;
-                            res.send(data);//若有错误返回失败
-                            conn.release();
-                        } else {
-                            project = new projectModel(rows[0].projectId, rows[0].projectName, rows[0].categoryName, rows[0].creatorName, rows[0].people,
-                                rows[0].content, rows[0].projectStatus);
-                            res.send(project);
-                            conn.release();
-                        }
-                    })
-                 }
-            }
-        })
-    });
+        if (err) sendData(req,res,next,conn,err);
+        else{
+            db.query('SELECT projectId,projectName,categoryName,creatorName,people,content,projectStatus,memberStatus ' +
+            'FROM project_user_info WHERE  projectId = ' + id + '', function (err, rows) {
+                if (err) {
+                    sendData(req,res,next,conn,err);
+                } else {
+                    project = new projectModel(rows[0].projectId, rows[0].projectName, rows[0].categoryName, rows[0].creatorName, rows[0].people,
+                        rows[0].content, rows[0].projectStatus);
+                    res.send(project);
+                    conn.release();
+                }
+            })
+        }
+    })
 })
 
 //用户发起新项目
@@ -167,18 +178,14 @@ router.post('/add-item',function(req,res){
         message :""
     }
     db.getConnection(function (err, conn) {
-        if (err) console.log("POOL ==> " + err);
+        if (err) sendData(req,res,next,conn,err);
         //根据token选出userId
         db.query('SELECT user_id FROM user WHERE user_token ="' + userToken + '"', function (err, rows) {
             if (err) {
-                data.message = err;
-                res.send(data);//若有错误返回false
-                conn.release();
+                sendData(req,res,next,conn,err);
             }else {
                 if(rows.length == 0){
-                    data.message = "请登录";
-                    res.send(data);
-                    conn.release();
+                    sendData(req,res,next,conn,"请登录");
                 }else{
                     var userId = rows[0].user_id;
                     project.setCreator(userId);
@@ -186,10 +193,7 @@ router.post('/add-item',function(req,res){
                     'VALUES ('+ project.getCategory()+','+project.getProjectStatus()+','+project.getCreator()+',"'+project.getName()+'",' +
                     '"'+project.getContent()+'",'+project.getPeople()+')',function(err , row){
                         if(err){
-                            console.log(err);
-                            data.message = err;
-                            res.send(data);//若有错误返回false
-                            conn.release();
+                            sendData(req,res,next,conn,err);
                         }else{
                             data.message = (row.affectedRows == 1 )? "" : "插入失败";
                             data.status = (row.affectedRows == 1) ? true : false;
@@ -214,13 +218,11 @@ router.get('/project-category',function(req,res){
     var result = [];
     db.getConnection(function(err ,conn){
         if(err){
-            data.message = err;
-            res.send({'data': data});
+            sendData(req,res,next,conn,err);
         }else{
             db.query('SELECT project_category_id as id,project_category_name as name FROM project_category',function(err,row){
                 if(err){
-                    data.message = err;
-                    res.send({'data': data});
+                    sendData(req,res,next,conn,err);
                 }else{
                     for(var i in row){
                         var cate = new category(row[i].id,row[i].name);
@@ -236,7 +238,7 @@ router.get('/project-category',function(req,res){
 })
 
 //修改项目的状态
-router.post('/change-project',function(req,res){
+router.post('/change-project',validToken,function(req,res,next){
     var db = req.db;
     var token = req.query.token;
     var id = req.query.id;
@@ -247,39 +249,19 @@ router.post('/change-project',function(req,res){
     }
     db.getConnection(function(err,conn){
         if(err){
-            data.message = err;
-            res.send({'data':data});
-        }else{
-            db.query('SELECT * FROM user WHERE user_token = '+token+'',function(err,row){
-                if(err){
-                    data.message = err;
-                    res.send({'data':data});
+            sendData(req,res,next,conn,err);
+        }else {
+            db.query('UPDATE project SET project_status = ' + projectStatus + ' WHERE project_id = ' + id + '', function (err, row) {
+                if (err) {
+                    sendData(req, res, next, conn, err);
+                } else {
+                    data.message = (row.affectedRows == 1) ? "修改成功" : "修改失败";
+                    data.status = (row.affectedRows == 1) ? true : false;
+                    res.send({'data': data});
                     conn.release();
-                }else{
-                   if(row.length == 0){
-                       data.message = "请登录";
-                       res.send({'data':data});
-                       conn.release();
-                   }else{
-                       db.query('UPDATE project SET project_status = '+projectStatus+' WHERE project_id = '+id+'',function(err,row){
-                           if(err){
-                               data.message = err;
-                               res.send({'data':data});
-                               conn.release();
-                           }else{
-                               console.log("asd")
-                               data.message = (row.affectedRows == 1)?"修改成功":"修改失败";
-                               data.status = (row.affectedRows ==1)?true:false;
-                               res.send({'data': data});
-                               conn.release();
-                           }
-                       })
-                   }
                 }
             })
-
         }
     })
-
 })
 module.exports = router;
