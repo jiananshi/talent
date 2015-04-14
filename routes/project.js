@@ -26,14 +26,20 @@ function validToken(req, res, next){
     })
 }
 //出错时返回一个data对象
-function sendData(req,res,next ,conn,message){
+function sendData(req,res,next, conn,message){
     var data = {
         message : "", //出错信息
         status : false //状态
     }
-    data.message = message;
-    conn.release();
-    res.send({"data" : data});
+    if(typeof (conn) == 'undefined'){
+        data.message = message;
+        res.send({"data" : data});
+    }else{
+        conn.release();
+        data.message = message;
+        res.send({"data" : data});
+    }
+
 
 }
 //得到所有状态为发布中的项目的信息
@@ -47,21 +53,23 @@ router.get('/', function (req, res,next) {
     }
     db.getConnection(function (err, conn) {
         if (err)  sendData(req,res,next,conn,err);
-        //取出所有项目信息
-        db.query('SELECT * FROM project_info WHERE projectStatus = 0',function(err,rows){
-            if(err){
-                sendData(req,res,next,conn,err);
-            }else {
-                for (var i in rows) {
+        else {
+            //取出所有项目信息
+            db.query('SELECT * FROM project_info WHERE projectStatus = 0', function (err, rows) {
+                if (err) {
+                    sendData(req, res, next, conn, err);
+                } else {
+                    for (var i in rows) {
                         //新建project对象
-                        project = new projectModel(rows[i].projectId,rows[i].projectName, rows[i].categoryName, rows[i].creatorName, rows[i].people,
-                            rows[i].content,rows[i].projectStatus);
+                        project = new projectModel(rows[i].projectId, rows[i].projectName, rows[i].categoryName, rows[i].creatorName, rows[i].people,
+                            rows[i].content, rows[i].projectStatus);
                         result.push(project);
                     }
-                res.send(result);
-                conn.release();
+                    res.send(result);
+                    conn.release();
                 }
-        })
+            })
+        }
     })
 });
 
