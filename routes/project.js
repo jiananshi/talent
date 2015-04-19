@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var common = require('../model/common');
 var projectModel = require('../model/projectModel');
+var simpleProjectModel = require('../model/SimpleProjectModel');
 var category = require('../model/category');
 
 function validToken(req, res, next){
@@ -39,14 +40,12 @@ function sendData(req,res,next, conn,message){
         data.message = message;
         res.send({"data" : data});
     }
-
-
 }
-//得到所有状态为发布中的项目的信息
+//得到所有状态为已立项、进行中、已结项（学校项目），报名中、进行中、已结束（自创项目）的简短信息（id,name,category,creator,status）
 router.get('/', function (req, res,next) {
     var db = req.db;
     var result = [];
-    var project;
+    var simpleProject;
     var data = {
         status: false,
         message : ""
@@ -54,16 +53,16 @@ router.get('/', function (req, res,next) {
     db.getConnection(function (err, conn) {
         if (err)  sendData(req,res,next,conn,err);
         else {
-            //取出所有项目信息
-            db.query('SELECT * FROM project_info WHERE projectStatus = 0', function (err, rows) {
+            //取出所有项目简短信息
+            db.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator FROM project_info WHERE projectStatus in (3,4,6,7,8,9)', function (err, rows) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
+                    console.log(rows);
                     for (var i in rows) {
                         //新建project对象
-                        project = new projectModel(rows[i].projectId, rows[i].projectName, rows[i].categoryName, rows[i].creatorName, rows[i].people,
-                            rows[i].content, rows[i].projectStatus);
-                        result.push(project);
+                        simpleProject = new simpleProjectModel(rows[i].id, rows[i].name, rows[i].category, rows[i].creator, rows[i].status);
+                        result.push(simpleProject);
                     }
                     res.send(result);
                     conn.release();
