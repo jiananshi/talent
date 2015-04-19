@@ -58,7 +58,6 @@ router.get('/', function (req, res,next) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
-                    console.log(rows);
                     for (var i in rows) {
                         //新建project对象
                         simpleProject = new simpleProjectModel(rows[i].id, rows[i].name, rows[i].category, rows[i].creator, rows[i].status);
@@ -71,6 +70,11 @@ router.get('/', function (req, res,next) {
         }
     })
 });
+
+//根据id返回项目详细信息，自创与学校项目返回的不同
+router.get('/project-detail',function(req,res){
+
+})
 
 //得到用户在指定项目中的状态（0为未报名，1为审核中，2为审核通过，3为审核未通过）
 router.get('/project-status' ,function(req,res,next){
