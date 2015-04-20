@@ -3,7 +3,13 @@ var router = express.Router();
 var common = require('../model/common');
 var projectModel = require('../model/projectModel');
 var simpleProjectModel = require('../model/SimpleProjectModel');
+var freeProjectModel = require('../model/freeProjectModel');
 var category = require('../model/category');
+var discussModel = require('../model/discussModel');
+var fundingModel = require('../model/fundingModel');
+var officialProjectModel = require('../model/officialProjectModel');
+var memberModel = require('../model/memberModel');
+
 
 function validToken(req, res, next){
     var db = req.db;
@@ -41,6 +47,32 @@ function sendData(req,res,next, conn,message){
         res.send({"data" : data});
     }
 }
+//获取项目的评论
+function getDiscuss(req,res,callback){
+    var db = req.db;
+    var id = req.query.id;
+    var comment;
+    var discuss = [];
+    db.getConnection(function(err,conn){
+        db.query('SELECT * FROM comment_info WHERE project_id = '+id+'',function(err,rows){
+            if(err) sendData(req,res,next,conn,err);
+            else{
+                if(rows.length == 0) discuss = [];
+                else{
+                    for(var i in rows){
+                        comment = new discussModel(rows[i].userId,rows[i].userName,rows[i].content,rows[i].createTime);
+                        discuss.push(comment);
+                    }
+                }
+                callback(discuss);
+
+            }
+
+        })
+
+    })
+
+}
 //得到所有状态为已立项、进行中、已结项（学校项目），报名中、进行中、已结束（自创项目）的简短信息（id,name,category,creator,status）
 router.get('/', function (req, res,next) {
     var db = req.db;
@@ -72,8 +104,98 @@ router.get('/', function (req, res,next) {
 });
 
 //根据id返回项目详细信息，自创与学校项目返回的不同
-router.get('/project-detail',function(req,res){
+router.get('/project-detail',function(req,res,next){
+    var db = req.db;
+    var id = req.query.id;
+    var freeProject;
+    var funding;
+    var officialProject;
+    var allFunding = [];
+    var member = function member(id,name){
+        this.name=name;
+        this.id=id;
+    }
+    var mainMember;
+    var member =[];
+    var teacher;
+    console.log("aaa");
+    //根据id判断是否为自创项目
+    db.getConnection(function(err, conn){
+        if(err) sendData(req,res,next,conn,err);
+        else {
+            db.query('SELECT categoryId FROM project_info WHERE projectId = ' + id + '', function (err, raw) {
+                if (err) sendData(req, res, next, conn, err);
+                else {
+                    if (raw.length == 0) sendData(req, res, next, conn, "该项目id不存在");
+                    else {
+                        var category = raw[0].categoryId;
+                        if (category == 4) {//说明是自创项目
+                            db.query('SELECT projectName,categoryName,startTime,endTime,funding,creatorName,people,content,projectStatus FROM project_info WHERE projectId = ' + id + '', function (err, raw) {
+                                if (err) sendData(req, res, next, conn, err);
+                                else{
+                                    var free = raw[0];
+                                    freeProject = new freeProjectModel(id,free.projectName,free.categoryName,1,free.startTime,free.endTime,free.funding,free.creatorName,free.people,free.content,[],[],free.projectStatus);
+                                    //根据id获取项目的评论
+                                   getDiscuss(req,res,function(discuss){
+                                        freeProject.setDiscuss(discuss);
+                                    });
+                                    //根据id获取众筹信息
+                                    db.query('SELECT * FROM funding_info WHERE projectId = '+id+'',function(err,rows){
+                                       if(err) sendData(req,res,next,conn,err);
+                                        else{
+                                           for(var i in rows){
+                                               funding = new fundingModel(rows[i].userId,rows[i].userName,rows[i].content,rows[i].money);
+                                               allFunding.push(funding);
+                                           }
+                                           freeProject.setAllCrowdfunding(allFunding);
+                                           res.send(freeProject);
+                                       }
+                                    })
+                                }
+                            })
+                        } else {//说明是正式项目
+                            db.query('SELECT projectName,categoryName,creatorName,content,people,startTime,endTime,source,aid,background,innovation,plan,prospect' +
+                            ' budget,resourcerequired ,projectStatus FROM project_info WHERE projectId = '+id+'', function(err,row){
+                                if(err) sendData(req,res,next,conn,err);
+                                else{
+                                    if(row.length == 0) sendData(req,res,next,conn,err);
+                                    else{
+                                        var o = row[0];
+                                        officialProject = new officialProjectModel(id, o.projectName, o.categoryName,2, o.creatorName, o.contetn, o.people, o.startTime, o.endTime,[], o.source, o.aid, o.background, o.innovation, o.plan, o.prospect, o.budget, o.resourcerequired, [],"",{}, o.projectStatus);
+                                        getDiscuss(req,res,function(discuss){
+                                            officialProject.setDiscuss(discuss);
+                                        })
+                                        db.query('SELECT * from member_info WHERE projectId = '+id+'',function(err,rows){
+                                            if(err) sendData(req,res,next,conn,err);
+                                            else{
+                                                for(var i in rows){
+                                                    console.log(rows[i]);
+                                                    console.log(rows[i].role);
+                                                    var projectMember =new memberModel(rows[i].userId,rows[i].userName);
+                                                    if(rows[i].role == 1){
+                                                        officialProject.setMainMember(projectMember);
+                                                    }else if(rows[i].role == 2){
+                                                        officialProject.setTeacher(rows[i].userName);
+                                                    }
+                                                    else {
+                                                        member.push(projectMember);
+                                                    }
+                                                }
+                                                officialProject.setMember(member);
+                                                res.send(officialProject);
+                                            }
+                                        })
+                                    }
+                                }
 
+
+                            })
+                        }
+                    }
+                }
+            })
+        }
+    })
 })
 
 //得到用户在指定项目中的状态（0为未报名，1为审核中，2为审核通过，3为审核未通过）

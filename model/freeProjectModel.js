@@ -1,6 +1,3 @@
-/**
- * Created by apple on 2015/4/20.
- */
 //对应自创项目
 module.exports = function(id,name,category,type,startTime,endTime,crowdfunding,creator,people,describe,discuss,allCrowdfunding,status){
     var freeProject = {
@@ -28,8 +25,26 @@ module.exports = function(id,name,category,type,startTime,endTime,crowdfunding,c
     freeProject.creator = creator;
     freeProject.people = people;
     freeProject.describe = describe;
+    freeProject.discuss = discuss;
     freeProject.allCrowdfunding = allCrowdfunding;
     freeProject.status = status;
+
+    freeProject.setName = function setName(name){
+        this.name = name;
+    }
+    freeProject.setType = function setType(type){
+         this.type = type;
+    }
+    freeProject.setCategory = function setCategory(category){
+        this.category = category;
+    }
+    freeProject.setDiscuss = function setDiscuss(discuss){
+        this.discuss = discuss;
+    }
+    freeProject.setAllCrowdfunding = function setAllCrowdfunding(allCrowdfunding){
+        this.allCrowdfunding = allCrowdfunding;
+    }
+
 
     return freeProject;
 }

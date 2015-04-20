@@ -10,26 +10,31 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-04-20 01:02:46
+Date: 2015-04-20 23:02:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
--- Table structure for `command`
+-- Table structure for `comment`
 -- ----------------------------
-DROP TABLE IF EXISTS `command`;
-CREATE TABLE `command` (
+DROP TABLE IF EXISTS `comment`;
+CREATE TABLE `comment` (
   `id` int(11) NOT NULL auto_increment,
   `project_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `content` text NOT NULL,
-  `create_time` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
+  `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
--- Records of command
+-- Records of comment
 -- ----------------------------
+INSERT INTO comment VALUES ('1', '11', '1', '很喜欢', '2015-04-20 19:32:42');
+INSERT INTO comment VALUES ('2', '12', '1', '不是很喜欢', '2015-04-20 19:33:02');
+INSERT INTO comment VALUES ('3', '11', '7', '怎么可以这么有创意', '2015-04-20 19:33:15');
+INSERT INTO comment VALUES ('4', '11', '8', '加我一个加我一个', '2015-04-20 19:33:27');
+INSERT INTO comment VALUES ('5', '1', '1', '细化喜欢小', '2015-04-20 21:49:41');
 
 -- ----------------------------
 -- Table structure for `competition`
@@ -273,6 +278,28 @@ CREATE TABLE `feature_directory` (
 -- Records of feature_directory
 -- ----------------------------
 INSERT INTO feature_directory VALUES ('1', '', '根目录', '0');
+
+-- ----------------------------
+-- Table structure for `funding`
+-- ----------------------------
+DROP TABLE IF EXISTS `funding`;
+CREATE TABLE `funding` (
+  `id` int(11) NOT NULL auto_increment,
+  `project_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `content` text,
+  `money` int(11) NOT NULL,
+  `createTime` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of funding
+-- ----------------------------
+INSERT INTO funding VALUES ('1', '11', '1', '很喜欢，捐一点', '5', '0000-00-00 00:00:00');
+INSERT INTO funding VALUES ('2', '11', '7', '有创意，支持', '10', '0000-00-00 00:00:00');
+INSERT INTO funding VALUES ('3', '11', '8', '怎么可以这么棒', '3', '0000-00-00 00:00:00');
+INSERT INTO funding VALUES ('4', '12', '10', '很喜欢这个项目', '100', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for `major`
@@ -548,6 +575,7 @@ CREATE TABLE `project` (
   `project_summary` varchar(255) default '' COMMENT '项目概述，用于对外展示',
   `project_signup_max` int(255) default '0' COMMENT '项目报名人数上限',
   `project_grouptype` varchar(255) default '' COMMENT '项目组类型',
+  `project_funding` int(11) NOT NULL COMMENT '表名该项目是众筹项目还是非众筹，只有自创项目才有，1表示众筹，2表示非众筹，学校项目为空值',
   PRIMARY KEY  (`project_id`),
   KEY `project_creator_id` (`project_creator_id`),
   KEY `project_category_id` (`project_category_id`),
@@ -557,19 +585,19 @@ CREATE TABLE `project` (
 -- ----------------------------
 -- Records of project
 -- ----------------------------
-INSERT INTO project VALUES ('1', '2', '3', '2015-04-20 00:59:15', '7', '智能机器人', '2014-12-12 00:00:00', '2015-02-16 00:00:00', '1', '2', '软件工程', '未受资助', '很多事情可以通过机器人来做，解放人工。', '会说话的机器人', '会说话', '需求文档v0.1', '软件开发', '8000', '机器人所需材料', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', '致力于智能机器人的研发', '2', '本科生');
-INSERT INTO project VALUES ('2', '2', '3', '2015-04-20 00:59:17', '8', '在线多人聊天系统', '2015-02-09 00:00:00', '2015-02-23 00:00:00', '2', '2', '嵌入式', '腾讯资助', '为视频会议，电话会议提供方便。', '多人语音视频聊天', '多人聊天', '设计文档v0.1', '专利', '8500', '实验室', '测试', '测试', '测试', '致力于多人聊天', '4', '研究生');
-INSERT INTO project VALUES ('3', '2', '4', '2015-04-20 00:59:23', '8', '音乐识别系统', '2015-02-16 00:00:00', '2015-02-27 00:00:00', '2', '2', '网络工程', '网易资助', '基于生活中听到一首歌，想不起名字的痛苦。', '听歌识曲', '帮你想歌名', '需求文档v0.2', '产品研制', '10000', '笔记本电脑&手机', '同意', '同意', '同意', '致力于识别歌名', '5', '本科生');
-INSERT INTO project VALUES ('4', '2', '6', '2015-04-20 00:59:26', '10', '科创app', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '1', '软件工程', '学校资助', '基于软院人才生态链的构建。', '软院生态链构建', '独一无二', '代码v0.2', '软件开发&论文', '20000', '电脑&手机', '', '', '', '致力于构建软院人才生态链', '6', '本科生&研究生');
-INSERT INTO project VALUES ('5', '1', '3', '2015-04-20 00:59:28', '10', '在线支付系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '1', '通信工程', '阿里巴巴资助', '出门忘记带钱包，手机一键支付。', '一键网上支付，轻松+愉快~', '扫一扫支付', '代码v1.0', '产品研制', '9000', '手机', null, null, null, 'summary一键支付', '5', '本科生');
-INSERT INTO project VALUES ('6', '1', '3', '2015-04-20 00:59:29', '1', '多功能邮箱APP', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '2', '软件工程', '腾讯资助', '好多邮箱，一个一个查看太麻烦了。', '在这里，你可以看你的QQ邮箱，gmail邮箱，foxmail都集中到这里来~', 'N个邮箱一起看', '前端界面v0.2', '专利', '6000', 'mac pro', null, null, null, '多个邮箱一起看', '9', '本科生');
-INSERT INTO project VALUES ('7', '1', '3', '2015-04-20 00:59:31', '7', '网上购物系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '2', '嵌入式', '阿里巴巴资助', '去超市搬回一堆东西太累了，直接网购。', '还说什么！买买买啊~', '网购新时代', '需求文档v1.0', '产品研制', '8500', '海量所实验室', null, null, null, '致力于买买买', '2', '本科生');
-INSERT INTO project VALUES ('8', '3', '5', '2015-04-20 00:59:34', '8', '网站动态验证码实现', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '2', '软件工程', '百度资助', '防止验证码被恶意系统识别。', '动态验证码！晃的你看不清~', '可以动的验证码', '后端代码v1.0', '专利', '9000', '嵌入式实验室', null, null, null, '可以动的验证码', '3', '本科生');
-INSERT INTO project VALUES ('9', '3', '1', '2015-04-20 00:59:36', '10', '智能订餐系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '2', '嵌入式', '饿了么资助', '天气太热，不想出门，网上订餐来解决。', '饿了么？就用智能订餐系统~一键选出你想要的！', '网上订餐', '需求文档v2.0', '软件开发', '8000', '高可信实验室', null, null, null, '足不出户吃大餐', '4', '本科生');
-INSERT INTO project VALUES ('10', '3', '4', '2015-04-20 00:59:41', '1', '智能电影分析系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '1', '通信工程', '美团资助', '想知道最近什么电影好看。', '最近想去看电影？看什么呢？智能电影分析系统帮你分析！', '网上订电影票', '测试计划v0.1', '产品研制', '9000', '电脑', null, null, null, '网上预定电影票', '8', '研究生');
-INSERT INTO project VALUES ('11', '4', '7', '2015-04-20 00:59:43', '7', '美食点评数据分析系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '1', '网络工程', '大众点评资助', '想知道附近有什么美食评价高。', '哪家餐厅好吃呢~来看大家的点评把~', '智能美食推荐', '测试计划v2.0', '软件开发', '10000', '电脑&手机', null, null, null, '提前预定座位', '7', '研究生');
-INSERT INTO project VALUES ('12', '4', '8', '2015-04-20 00:59:45', '8', '股票分析系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '2', '软件工程', '银联资助', '初入股市的股民需要一个聪明的分析系统。', '哪只股票最近会涨？其实我也不知道。。。但是它知道！', '股市操盘手', '测试报告v1.0', '论文', '9000', 'ipad', null, null, null, '分析股市大盘趋势', '6', '研究生');
-INSERT INTO project VALUES ('13', '4', '9', '2015-04-20 00:59:48', '10', '随心之旅自由行定制系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '1', '软件工程', '携程资助', '出去玩需要制定旅行计划。', '想去哪儿~基于谷歌地图为您绘制最佳自由行路线~', '去哪儿？去啊！', '系统发布', '专利', '10000', '电脑', null, null, null, '智能定制计划', '5', '研究生');
+INSERT INTO project VALUES ('1', '2', '3', '2015-04-20 00:59:15', '7', '智能机器人', '2014-12-12 00:00:00', '2015-02-16 00:00:00', '1', '2', '软件工程', '未受资助', '很多事情可以通过机器人来做，解放人工。', '会说话的机器人', '会说话', '需求文档v0.1', '软件开发', '8000', '机器人所需材料', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', '致力于智能机器人的研发', '2', '本科生', '0');
+INSERT INTO project VALUES ('2', '2', '3', '2015-04-20 00:59:17', '8', '在线多人聊天系统', '2015-02-09 00:00:00', '2015-02-23 00:00:00', '2', '2', '嵌入式', '腾讯资助', '为视频会议，电话会议提供方便。', '多人语音视频聊天', '多人聊天', '设计文档v0.1', '专利', '8500', '实验室', '测试', '测试', '测试', '致力于多人聊天', '4', '研究生', '0');
+INSERT INTO project VALUES ('3', '2', '4', '2015-04-20 00:59:23', '8', '音乐识别系统', '2015-02-16 00:00:00', '2015-02-27 00:00:00', '2', '2', '网络工程', '网易资助', '基于生活中听到一首歌，想不起名字的痛苦。', '听歌识曲', '帮你想歌名', '需求文档v0.2', '产品研制', '10000', '笔记本电脑&手机', '同意', '同意', '同意', '致力于识别歌名', '5', '本科生', '0');
+INSERT INTO project VALUES ('4', '2', '6', '2015-04-20 01:49:18', '10', '科创app', '2015-01-01 01:48:54', '2015-05-08 01:49:10', '1', '1', '软件工程', '学校资助', '基于软院人才生态链的构建。', '软院生态链构建', '独一无二', '代码v0.2', '软件开发&论文', '20000', '电脑&手机', '', '', '', '致力于构建软院人才生态链', '6', '本科生&研究生', '0');
+INSERT INTO project VALUES ('5', '1', '3', '2015-04-20 01:49:26', '10', '在线支付系统', '2015-04-20 01:49:19', '2015-04-20 01:49:23', '2', '1', '通信工程', '阿里巴巴资助', '出门忘记带钱包，手机一键支付。', '一键网上支付，轻松+愉快~', '扫一扫支付', '代码v1.0', '产品研制', '9000', '手机', null, null, null, 'summary一键支付', '5', '本科生', '0');
+INSERT INTO project VALUES ('6', '1', '3', '2015-04-20 01:58:45', '1', '多功能邮箱APP', '2015-02-23 01:49:27', '2015-05-09 01:49:32', '1', '2', '软件工程', '腾讯资助', '好多邮箱，一个一个查看太麻烦了。', '在这里，你可以看你的QQ邮箱，gmail邮箱，foxmail都集中到这里来~', 'N个邮箱一起看', '前端界面v0.2', '专利', '6000', 'mac pro', null, null, null, '多个邮箱一起看', '9', '本科生', '0');
+INSERT INTO project VALUES ('7', '1', '3', '2015-04-20 00:59:31', '7', '网上购物系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '2', '嵌入式', '阿里巴巴资助', '去超市搬回一堆东西太累了，直接网购。', '还说什么！买买买啊~', '网购新时代', '需求文档v1.0', '产品研制', '8500', '海量所实验室', null, null, null, '致力于买买买', '2', '本科生', '0');
+INSERT INTO project VALUES ('8', '3', '5', '2015-04-20 00:59:34', '8', '网站动态验证码实现', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '2', '软件工程', '百度资助', '防止验证码被恶意系统识别。', '动态验证码！晃的你看不清~', '可以动的验证码', '后端代码v1.0', '专利', '9000', '嵌入式实验室', null, null, null, '可以动的验证码', '3', '本科生', '0');
+INSERT INTO project VALUES ('9', '3', '1', '2015-04-20 00:59:36', '10', '智能订餐系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '2', '嵌入式', '饿了么资助', '天气太热，不想出门，网上订餐来解决。', '饿了么？就用智能订餐系统~一键选出你想要的！', '网上订餐', '需求文档v2.0', '软件开发', '8000', '高可信实验室', null, null, null, '足不出户吃大餐', '4', '本科生', '0');
+INSERT INTO project VALUES ('10', '3', '4', '2015-04-20 00:59:41', '1', '智能电影分析系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '1', '通信工程', '美团资助', '想知道最近什么电影好看。', '最近想去看电影？看什么呢？智能电影分析系统帮你分析！', '网上订电影票', '测试计划v0.1', '产品研制', '9000', '电脑', null, null, null, '网上预定电影票', '8', '研究生', '0');
+INSERT INTO project VALUES ('11', '4', '7', '2015-04-20 01:34:35', '7', '美食点评数据分析系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '1', '网络工程', '大众点评资助', '想知道附近有什么美食评价高。', '哪家餐厅好吃呢~来看大家的点评把~', '智能美食推荐', '测试计划v2.0', '软件开发', '10000', '电脑&手机', null, null, null, '提前预定座位', '7', '研究生', '1');
+INSERT INTO project VALUES ('12', '4', '8', '2015-04-20 01:34:33', '8', '股票分析系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '2', '软件工程', '银联资助', '初入股市的股民需要一个聪明的分析系统。', '哪只股票最近会涨？其实我也不知道。。。但是它知道！', '股市操盘手', '测试报告v1.0', '论文', '9000', 'ipad', null, null, null, '分析股市大盘趋势', '6', '研究生', '1');
+INSERT INTO project VALUES ('13', '4', '9', '2015-04-20 01:34:49', '10', '随心之旅自由行定制系统', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2', '1', '软件工程', '携程资助', '出去玩需要制定旅行计划。', '想去哪儿~基于谷歌地图为您绘制最佳自由行路线~', '去哪儿？去啊！', '系统发布', '专利', '10000', '电脑', null, null, null, '智能定制计划', '5', '研究生', '2');
 
 -- ----------------------------
 -- Table structure for `project_category`
@@ -598,21 +626,26 @@ CREATE TABLE `project_member` (
   `project_member_id` int(255) NOT NULL auto_increment,
   `project_id` int(255) NOT NULL,
   `user_id` int(255) NOT NULL,
-  `project_member_role` int(255) NOT NULL default '1' COMMENT '学生和老师保存在同一张表中，1表示学生，2老师，3管理者',
+  `project_member_role` int(255) NOT NULL default '0' COMMENT '学生和老师保存在同一张表中，1表示队长，2老师，3管理者，4，普通队员',
   `project_member_task` varchar(255) NOT NULL default '' COMMENT '保存每个人在项目中的任务',
   `project_member_opinion` text COMMENT '学生或老师的意见',
-  `project_member_status` int(255) NOT NULL default '0',
+  `project_member_status` int(255) default '0',
   `project_application_reason` text,
   PRIMARY KEY  (`project_member_id`),
   KEY `project_id` (`project_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `project_member_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `project_member_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project_member
 -- ----------------------------
+INSERT INTO project_member VALUES ('1', '11', '1', '0', '', null, '1', '我对这个项目很感兴趣，希望可以加入');
+INSERT INTO project_member VALUES ('2', '1', '7', '1', '队长', null, null, null);
+INSERT INTO project_member VALUES ('3', '1', '8', '2', '指导老师', null, null, null);
+INSERT INTO project_member VALUES ('4', '12', '7', '0', '', null, '2', '我会spring希望可以加入');
+INSERT INTO project_member VALUES ('5', '1', '10', '4', '队员', null, '0', null);
 
 -- ----------------------------
 -- Table structure for `project_period`
@@ -814,7 +847,7 @@ CREATE TABLE `user` (
 INSERT INTO user VALUES ('1', '3', '1', '1', '1', '1', 'dyg', 'axt', 'xxx', '2013', 'xxx', 'xxx', 'xxx', 'xxx', 'xxx', 'v', 'xxx', 'xxx', 'xxx', 'xxx', ' 4a79bbdb078ab6f3e317b6c93ef8ae68e4964f9d', '0');
 INSERT INTO user VALUES ('7', '1', '1', '1', '1', 'df399330d331a0c6a2f8e1056a9eeb66ea904027', 'shy', 'shy', '10132510262', '2013', '222', '', '', '', '', '333', '', '', '444', '555', '7', '0');
 INSERT INTO user VALUES ('8', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'burgess', 'ymy', '10132510232', '2013', '123', '', '', '', '', '123', '', '', '123', '123', '8', '0');
-INSERT INTO user VALUES ('10', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'null', 'jwm', '10132510246', '2013', 'xxxx', '', '', '', '', 'xxx', '', '', 'xxx', 'xxx', '10', '0');
+INSERT INTO user VALUES ('10', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'ymy', 'jwm', '10132510246', '2013', 'xxxx', '', '', '', '', 'xxx', '', '', 'xxx', 'xxx', '10', '0');
 
 -- ----------------------------
 -- Table structure for `user_gender`
@@ -910,16 +943,34 @@ INSERT INTO user_to_role VALUES ('34', '8', '6');
 INSERT INTO user_to_role VALUES ('35', '8', '7');
 
 -- ----------------------------
+-- View structure for `comment_info`
+-- ----------------------------
+DROP VIEW IF EXISTS `comment_info`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `comment_info` AS select `user`.`user_fullname` AS `userName`,`comment`.`content` AS `content`,`comment`.`user_id` AS `userId`,`comment`.`create_time` AS `createTime`,`comment`.`project_id` AS `project_id` from (`comment` join `user`) where (`comment`.`user_id` = `user`.`user_id`);
+
+-- ----------------------------
 -- View structure for `competition_info`
 -- ----------------------------
 DROP VIEW IF EXISTS `competition_info`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `competition_info` AS select `competition`.`id` AS `id`,`competition`.`createtime` AS `createTime`,`competition`.`content` AS `content`,`competition`.`competition_name` AS `name`,`competition`.`max_people` AS `people`,`user`.`user_name` AS `creator`,`competition`.`endTime` AS `endTime` from (`competition` join `user`) where (`competition`.`creator_id` = `user`.`user_id`);
 
 -- ----------------------------
+-- View structure for `funding_info`
+-- ----------------------------
+DROP VIEW IF EXISTS `funding_info`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `funding_info` AS select `funding`.`user_id` AS `userId`,`funding`.`content` AS `content`,`funding`.`money` AS `money`,`funding`.`project_id` AS `projectId`,`user`.`user_fullname` AS `userName` from (`funding` join `user`) where (`funding`.`user_id` = `user`.`user_id`);
+
+-- ----------------------------
+-- View structure for `member_info`
+-- ----------------------------
+DROP VIEW IF EXISTS `member_info`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `member_info` AS select `project_member`.`user_id` AS `userId`,`project_member`.`project_member_role` AS `role`,`user`.`user_fullname` AS `userName`,`project_member`.`project_id` AS `projectId` from (`project_member` join `user`) where (`project_member`.`user_id` = `user`.`user_id`);
+
+-- ----------------------------
 -- View structure for `project_info`
 -- ----------------------------
 DROP VIEW IF EXISTS `project_info`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `project_info` AS select `project`.`project_id` AS `projectId`,`project`.`project_category_id` AS `categoryId`,`project`.`project_status` AS `projectStatus`,`project_category`.`project_category_name` AS `categoryName`,`project_category`.`project_category_description` AS `categoryDescription`,`project_status`.`project_status_name` AS `projectStatusName`,`project`.`project_creator_id` AS `creatorId`,`user`.`user_fullname` AS `creatorName`,`project`.`project_name` AS `projectName`,`project`.`project_start` AS `startTime`,`project`.`project_end` AS `endTime`,`project`.`project_signup_max` AS `people`,`project`.`project_describe` AS `content` from (((`project` join `project_category`) join `project_status`) join `user`) where ((`project`.`project_category_id` = `project_category`.`project_category_id`) and (`project`.`project_status` = `project_status`.`project_status_id`) and (`project`.`project_creator_id` = `user`.`user_id`));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `project_info` AS select `project`.`project_id` AS `projectId`,`project`.`project_category_id` AS `categoryId`,`project`.`project_status` AS `projectStatus`,`project_category`.`project_category_name` AS `categoryName`,`project_category`.`project_category_description` AS `categoryDescription`,`project_status`.`project_status_name` AS `projectStatusName`,`project`.`project_creator_id` AS `creatorId`,`user`.`user_fullname` AS `creatorName`,`project`.`project_name` AS `projectName`,`project`.`project_start` AS `startTime`,`project`.`project_end` AS `endTime`,`project`.`project_signup_max` AS `people`,`project`.`project_describe` AS `content`,`project`.`project_funding` AS `funding`,`project`.`project_researchobject` AS `researchobject`,`project`.`project_source` AS `source`,`project`.`project_subject` AS `subject`,`project`.`project_aid` AS `aid`,`project`.`project_background` AS `background`,`project`.`project_innovation` AS `innovation`,`project`.`project_plan` AS `plan`,`project`.`project_prospect` AS `prospect`,`project`.`project_budget` AS `budget`,`project`.`project_resourcerequired` AS `resourcerequired`,`project`.`project_grouptype` AS `grouptype`,`project`.`project_summary` AS `summary`,`project`.`project_institutionopinion` AS `institutionopinion`,`project`.`project_departmentopinion` AS `departmentopinion`,`project`.`project_teacheropinion` AS `teacheropinion` from (((`project` join `project_category`) join `project_status`) join `user`) where ((`project`.`project_category_id` = `project_category`.`project_category_id`) and (`project`.`project_status` = `project_status`.`project_status_id`) and (`project`.`project_creator_id` = `user`.`user_id`));
 
 -- ----------------------------
 -- View structure for `project_user_info`
