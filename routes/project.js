@@ -86,13 +86,13 @@ router.get('/', function (req, res,next) {
         if (err)  sendData(req,res,next,conn,err);
         else {
             //取出所有项目简短信息
-            db.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator FROM project_info WHERE projectStatus in (3,4,6,7,8,9)', function (err, rows) {
+            db.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator, startTime,endTime FROM project_info WHERE projectStatus in (3,4,6,7,8,9)', function (err, rows) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
                     for (var i in rows) {
                         //新建project对象
-                        simpleProject = new simpleProjectModel(rows[i].id, rows[i].name, rows[i].category, rows[i].creator, rows[i].status);
+                        simpleProject = new simpleProjectModel(rows[i].id, rows[i].name, rows[i].category, rows[i].creator,rows[i].startTime,rows[i].endTime, rows[i].status);
                         result.push(simpleProject);
                     }
                     res.send(result);
