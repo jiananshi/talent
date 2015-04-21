@@ -418,4 +418,42 @@ router.post('/change-project',validToken,function(req,res,next){
         }
     })
 })
+
+router.post('/discuss',function(req,res,next){
+    var token = req.query.token;//用户token
+    var id = req.query.id;//项目id
+    var content = req.query.content;//评论内容
+    var db = req.db;
+    db.getConnection(function(err,conn){
+        if(err) sendData(req,res,next,conn,err);
+        else{
+            db.query('SELECT user_id from user where user_token = "'+token+'"',function(err,row){
+                if(err) sendData(req,res,next,conn,err);
+                else{
+                    if(row.length == 0){
+                        sendData(req,res,next,conn,"请重新登陆");
+                    }else{
+                        var userId = row[0].user_id;
+                        console.log(userId);
+                        db.query('INSERT INTO comment (project_id,user_id,content) VALUES ('+id+','+userId+',"'+content+'")',function(err,row){
+                            if(err) sendData(req,res,next,conn,err);
+                            else{
+                                if(row.affectedRows == 0) {
+                                    sendData(req,res,next,conn,"评论失败");
+                                }else{
+                                    var data = {
+                                        status : true,
+                                        message : "评论成功"
+                                    }
+                                    res.send({"data":data});
+                                }
+                            }
+
+                        })
+                    }
+                }
+            })
+        }
+    })
+})
 module.exports = router;
