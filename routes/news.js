@@ -25,11 +25,24 @@ router.get('/', function (req, res) {
                 conn.release();
             }else{
                 for(var i in rows){
-                    var news = newsModel(rows[i].id, rows[i].name,rows[i].imgUrl,rows[i].content,rows[i].time,rows[i].readTimes);
+                    var news = newsModel(rows[i].id, rows[i].name,1,rows[i].imgUrl,rows[i].content.substr(0,40),rows[i].time,rows[i].readTimes);
                     result.push(news);
                 }
-                res.send(result);
-                conn.release();
+                db.query('SELECT notice_id as id,notice_title as name,notice_content as content,notice_createtime as time FROM notice WHERE notice_status = 0 ',function(err,rows){
+                    if(err){
+                        console.log(err);
+                        data.message = err;
+                        res.send({'data' : data});
+                        conn.release();
+                    }else{
+                        for(var i in rows){
+                            var news = newsModel(rows[i].id, rows[i].name,2,"",rows[i].content.substr(0,40),rows[i].time,"");
+                            result.push(news);
+                        }
+                        res.send(result);
+                        conn.release();
+                    }
+                })
             }
         })
 

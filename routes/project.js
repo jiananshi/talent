@@ -347,7 +347,6 @@ router.get('/project-category',function(req,res){
         status : false,
         message : ""
     }
-
     var result = [];
     db.getConnection(function(err ,conn){
         if(err){
