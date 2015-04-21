@@ -43,6 +43,7 @@ function sendData(req,res,next, conn,message){
         res.send({"data" : data});
     }else{
         conn.release();
+        console.log(message);
         data.message = message;
         res.send({"data" : data});
     }
@@ -444,6 +445,46 @@ router.post('/discuss',function(req,res,next){
                                     var data = {
                                         status : true,
                                         message : "评论成功"
+                                    }
+                                    res.send({"data":data});
+                                }
+                            }
+
+                        })
+                    }
+                }
+            })
+        }
+    })
+})
+
+router.post('/crowdfunding',function(req,res,next){
+    var token = req.query.token;
+    var id = req.query.id;//项目id
+    var content = req.query.content;
+    var money = req.query.money;
+    var db = req.db;
+    db.getConnection(function(err,conn){
+        if(err) sendData(req,res,next,conn,err);
+        else{
+            db.query('SELECT user_id from user where user_token = "'+token+'"',function(err,row){
+                if(err) sendData(req,res,next,conn,err);
+                else{
+                    if(row.length == 0){
+                        sendData(req,res,next,conn,"请重新登陆");
+                    }else{
+                        var userId = row[0].user_id;
+                        console.log(userId);
+                        db.query('INSERT INTO funding (project_id,user_id,content,money) VALUES ('+id+','+userId+',"'+content+'",'+money+')',function(err,row){
+                            if(err) sendData(req,res,next,conn,err);
+                            else{
+                                console.log(userId);
+                                if(row.affectedRows == 0) {
+                                    sendData(req,res,next,conn,"充钱失败");
+                                }else{
+                                    var data = {
+                                        status : true,
+                                        message : "充钱成功"
                                     }
                                     res.send({"data":data});
                                 }
