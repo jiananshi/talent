@@ -115,6 +115,12 @@ router.get('/project-detail',function(req,res,next){
         this.name=name;
         this.id=id;
     }
+    var allCrowfunding = {
+        planMoney : 0,
+        realMoney : 0,
+        people : 0,
+        crowfunding : []
+    }
     var mainMember;
     var member =[];
     var teacher;
@@ -130,27 +136,43 @@ router.get('/project-detail',function(req,res,next){
                     else {
                         var category = raw[0].categoryId;
                         if (category == 4) {//说明是自创项目
-                            db.query('SELECT projectName,categoryName,startTime,endTime,funding,creatorName,people,content,projectStatus FROM project_info WHERE projectId = ' + id + '', function (err, raw) {
+                            db.query('SELECT projectName,categoryName,startTime,endTime,funding,creatorName,people,content,projectStatus,planmoney FROM project_info WHERE projectId = ' + id + '', function (err, raw) {
                                 if (err) sendData(req, res, next, conn, err);
                                 else{
                                     var free = raw[0];
-                                    freeProject = new freeProjectModel(id,free.projectName,free.categoryName,1,free.startTime,free.endTime,free.funding,free.creatorName,free.people,free.content,[],[],free.projectStatus);
+                                    freeProject = new freeProjectModel(id,free.projectName,free.categoryName,1,free.startTime,free.endTime,free.funding,free.creatorName,free.people,free.content,[],{},free.projectStatus);
                                     //根据id获取项目的评论
                                    getDiscuss(req,res,function(discuss){
                                         freeProject.setDiscuss(discuss);
                                     });
-                                    //根据id获取众筹信息
-                                    db.query('SELECT * FROM funding_info WHERE projectId = '+id+'',function(err,rows){
-                                       if(err) sendData(req,res,next,conn,err);
-                                        else{
-                                           for(var i in rows){
-                                               funding = new fundingModel(rows[i].userId,rows[i].userName,rows[i].content,rows[i].money);
-                                               allFunding.push(funding);
-                                           }
-                                           freeProject.setAllCrowdfunding(allFunding);
-                                           res.send(freeProject);
-                                       }
-                                    })
+                                    if(free.funding == 1) {//1说明是众筹项目
+
+                                        allCrowfunding.planMoney = free.planmoney;
+                                        //根据id获取众筹信息
+                                        db.query('SELECT userId,userName,content,money FROM funding_info WHERE projectId = ' + id + '', function (err, rows) {
+                                            if (err) sendData(req, res, next, conn, err);
+                                            else {
+                                                for (var i in rows) {
+                                                    funding = new fundingModel(rows[i].userId, rows[i].userName, rows[i].content, rows[i].money);
+                                                    allFunding.push(funding);
+
+                                                }
+                                                allCrowfunding.crowfunding=allFunding;
+                                                db.query('select count(DISTINCT userId) as people, (case when sum(money) is null then 0 else sum(money) end) as realmoney from funding_info where projectId = '+id+'',function(err,row){
+                                                    if(err) sendData(req,res,next,conn,err);
+                                                    else{
+                                                        allCrowfunding.people = row[0].people;
+                                                        allCrowfunding.realMoney = row[0].realmoney;
+                                                        freeProject.setAllCrowdfunding(allCrowfunding);
+                                                    }
+                                                    res.send(freeProject);
+                                                })
+
+                                            }
+                                        })
+                                    }else{
+                                        res.send(freeProject);
+                                    }
                                 }
                             })
                         } else {//说明是正式项目

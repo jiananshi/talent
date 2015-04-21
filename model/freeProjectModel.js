@@ -12,7 +12,7 @@ module.exports = function(id,name,category,type,startTime,endTime,crowdfunding,c
         people :0,
         describe : "",
         discuss : [],
-        allCrowdfunding : [],
+        allCrowdfunding : {},
         status :  7
     }
     freeProject.id = id;
