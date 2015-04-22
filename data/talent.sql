@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-04-21 15:54:32
+Date: 2015-04-23 00:07:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,7 @@ CREATE TABLE `comment` (
   `content` text NOT NULL,
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of comment
@@ -35,6 +35,8 @@ INSERT INTO comment VALUES ('2', '12', '1', '不是很喜欢', '2015-04-20 19:33
 INSERT INTO comment VALUES ('3', '11', '7', '怎么可以这么有创意', '2015-04-20 19:33:15');
 INSERT INTO comment VALUES ('4', '11', '8', '加我一个加我一个', '2015-04-20 19:33:27');
 INSERT INTO comment VALUES ('5', '1', '1', '细化喜欢小', '2015-04-20 21:49:41');
+INSERT INTO comment VALUES ('6', '11', '10', '这么做不科学吧', '2015-04-21 21:44:45');
+INSERT INTO comment VALUES ('7', '1', '10', '很好', '2015-04-21 22:53:39');
 
 -- ----------------------------
 -- Table structure for `competition`
@@ -289,17 +291,18 @@ CREATE TABLE `funding` (
   `user_id` int(11) NOT NULL,
   `content` text,
   `money` int(11) NOT NULL,
-  `createTime` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
+  `createTime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of funding
 -- ----------------------------
-INSERT INTO funding VALUES ('1', '11', '1', '很喜欢，捐一点', '5', '0000-00-00 00:00:00');
-INSERT INTO funding VALUES ('2', '11', '7', '有创意，支持', '10', '0000-00-00 00:00:00');
-INSERT INTO funding VALUES ('3', '11', '8', '怎么可以这么棒', '3', '0000-00-00 00:00:00');
-INSERT INTO funding VALUES ('4', '12', '10', '很喜欢这个项目', '100', '0000-00-00 00:00:00');
+INSERT INTO funding VALUES ('1', '11', '1', '很喜欢，捐一点', '5', '2015-04-21 23:27:49');
+INSERT INTO funding VALUES ('2', '11', '7', '有创意，支持', '10', '2015-04-10 23:27:53');
+INSERT INTO funding VALUES ('3', '11', '8', '怎么可以这么棒', '3', '2015-03-30 23:27:57');
+INSERT INTO funding VALUES ('4', '12', '10', '很喜欢这个项目', '100', '2015-04-25 23:28:00');
+INSERT INTO funding VALUES ('5', '11', '10', '喜欢就捐了', '100', '2015-04-21 23:37:40');
 
 -- ----------------------------
 -- Table structure for `major`
@@ -418,7 +421,7 @@ CREATE TABLE `news` (
 -- ----------------------------
 -- Records of news
 -- ----------------------------
-INSERT INTO news VALUES ('1', '1', '7课题获2015年上海学校德育研究课题立项', '2015年上海学校德育研究课题立项情况近期公布，我校3项课题获得上海市德育决策咨询课题立项，4项课题获得上海市德育实践课题立项。据悉，2015年上海学校德育研究课题共有950余项课题申报，最终立项德育理论研究课题8项、德育决策咨文课题25项、德育实践研究课题169项。3月27日，上海市高等学校思想理论教育研究会主办的“第二届上海高校网络文化建设论坛”举行，我校思政工作团队获得3项1等奖，2项2等奖、2项3等奖，综合居上海高校首位。', '2015-02-01 21:03:36', '0', '0', 'http://news.ecnu.edu.cn/_upload/article/65/32/3961c72440aca90a8fd4c6fc83cb/938c8511-3bb4-46cd-b2fe-2');
+INSERT INTO news VALUES ('1', '1', '7课题获2015年上海学校德育研究课题立项', '2015年上海学校德育研究课题立项情况近期公布，我校3项课题获得上海市德育决策咨询课题立项，4项课题获得上海市德育实践课题立项。据悉，2015年上海学校德育研究课题共有950余项课题申报，最终立项德育理论研究课题8项、德育决策咨文课题25项、德育实践研究课题169项。3月27日，上海市高等学校思想理论教育研究会主办的“第二届上海高校网络文化建设论坛”举行，我校思政工作团队获得3项1等奖，2项2等奖、2项3等奖，综合居上海高校首位。', '2015-02-01 21:03:36', '2', '0', 'http://news.ecnu.edu.cn/_upload/article/65/32/3961c72440aca90a8fd4c6fc83cb/938c8511-3bb4-46cd-b2fe-2');
 INSERT INTO news VALUES ('2', '1', '2名教师入选上海市2014年度“阳光计划”项目', '　上海市教育卫生工作委员会、上海市教育委员会、上海市教育发展基金会于近日公布了2014年度“阳光计划”项目名单。我校教师闫方洁的《自媒体时代下大学生的媒介话语机制研究》、夏建国的《新媒体时代高校新闻发言人制度在危机应对中的功能及运用》入选，获得了2014年度“阳光计划”项目资助。\n\n　　“阳光计划”是由市教育发展基金会出资，并与市教卫工作党委、市教委于2009年开始共同实施的上海高校思想政治教育优秀青年教师培养计划，旨在培养和造就一批党建工作、宣传思想文化工作和大学生思想政治教育工作骨干人才，形成一系列高质量的党建、宣传思想文化和思政工作研究成果。\n\n　　2014年，上海市教育卫生系统各有关单位共推荐了126名青年教师申报“阳光计划”。经专家评审，网上公示，市教卫工作党委、市教委、市教育发展基金会审核，共确定50人入选2014年度“阳光计划”。', '2015-02-01 21:44:23', '0', '0', 'http://news.ecnu.edu.cn/_ueditor/dialogs/showOriginalImg.html?img=/_upload/article/71/e4/21fabf6a469');
 INSERT INTO news VALUES ('3', '2', '哥伦比亚共和国教育部代表团访问我校', '4月3日下午，以哥伦比亚共和国教育部长Gina Parody为团长的哥伦比亚共和国教育部代表团一行8人访问我校，陪同来访的有哥伦比亚共和国基础及中等教育副部长Carlos Garcia、高等教育副部长Natalia Ariza、规划办主任Victor Saavedra、部长私人秘书Juan Pablo，哥伦比亚共和国驻沪总领事Richardo Galindo、文化领事Camila Gomez、总领事助理宣秀丽。Gina Parody部长一行来访旨在了解我国高校的教师培训项目和教师培养经验，特别是学前教师培养、中学教师培训、国际教师教育等方面的成果。 ', '2015-02-01 21:46:38', '0', '0', 'http://news.ecnu.edu.cn/_ueditor/dialogs/showOriginalImg.html?img=/_upload/article/71/e4/21fabf6a469');
 INSERT INTO news VALUES ('4', '1', '2014-2015仲利国际奖学金在校颁发', '4月8日下午，2014-2015学年仲利国际奖学金颁奖仪式在我校闵行校区行政楼403会议室举行。仲利国际租赁有限公司企划处资深总监吴昭甫，人力资源处主任蒋辰威、副主任汪智敏，我校学生管理处处长俞世恩、副处长秦虎出席颁奖仪式。\n\n　　典礼伊始，我校商学院2012级企业管理系学生杨婉俪作为获奖学生发言，总结学习及实践经验的同时对仲利国际的资助表示感谢。吴昭甫为获奖学生颁发荣誉证书，20位来自金融与统计学院、商学院、数学系等院系的同学获此奖项。\n吴昭甫向获奖学生表示祝贺，表示希望通过提供实习、企业研修等形式助力我校教育事业的发展。俞世恩对仲利国际租赁有限公司为我校学生提供的关心与帮助表示感谢，期待与仲利国际更长远的校企合作，同时希望获奖学生勤奋学习、心系社会、回馈社会，继续弘扬仲利精神、师大精神。\n\n　　为支持华东师范大学教育事业的发展，奖励在校优秀学生勤奋学习、刻苦钻研、开拓视野，仲利国际租赁有限公司2013年起在我校捐资设立“华东师范大学仲利国际奖学金”，用于奖励华东师范大学商学院、金融与统计学院、信息科学技术学院、数学系等院系的优秀学生。每年共评选20位获奖学生，获奖学生将获得每年5000元的奖学金。　', '2015-02-01 21:57:52', '0', '0', 'http://news.ecnu.edu.cn/_upload/article/00/1a/f8c16edf4d42a2de1bb49c909201/73c641ec-f38a-43cc-b33e-d');
@@ -575,13 +578,13 @@ CREATE TABLE `project` (
   `project_summary` varchar(255) default '' COMMENT '项目概述，用于对外展示',
   `project_signup_max` int(255) default '0' COMMENT '项目报名人数上限',
   `project_grouptype` varchar(255) default '' COMMENT '项目组类型',
-  `project_funding` int(11) NOT NULL COMMENT '表名该项目是众筹项目还是非众筹，只有自创项目才有，1表示众筹，2表示非众筹，学校项目为空值',
-  `project_funding_planmoney` int(11) NOT NULL,
+  `project_funding` int(11) NOT NULL default '0' COMMENT '表名该项目是众筹项目还是非众筹，只有自创项目才有，1表示众筹，2表示非众筹，学校项目为空值',
+  `project_funding_planmoney` int(11) NOT NULL default '0',
   PRIMARY KEY  (`project_id`),
   KEY `project_creator_id` (`project_creator_id`),
   KEY `project_category_id` (`project_category_id`),
   CONSTRAINT `project_ibfk_2` FOREIGN KEY (`project_category_id`) REFERENCES `project_category` (`project_category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of project

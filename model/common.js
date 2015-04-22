@@ -26,3 +26,13 @@ exports.objClone = function cloneObject(src) {
   }
   return dest;
 };
+
+exports.makeDate = function makeDate(date) {
+  if (date.length > 10) {
+    return date.toISOString().
+        replace(/T/, ' ').
+        replace(/\..+/, '');
+  } else {
+    return "";
+  }
+};

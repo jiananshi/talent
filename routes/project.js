@@ -324,11 +324,20 @@ router.get('/get-project',validToken, function(req,res){
     })
 })
 
-//用户发起新项目
-router.post('/add-item',function(req,res){
+//用户发起自创项目
+router.post('/add-item-student',function(req,res,next){
     var db = req.db;
-    var project = new projectModel(0,req.query.name,req.query.category,0,req.query.people,req.query.content,0);
+    var project = new projectModel(0,req.query.name,req.query.category,0,req.query.people,req.query.discribe,0);
+    var startTimeStamp = req.query.startTime;
+    var endTimeStamp = req.query.endTime;
+    var newDate = new Date();
+    newDate.setTime(startTimeStamp * 1000);
+    var startTime = newDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    newDate.setTime(endTimeStamp * 1000);
+    var endTime = newDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
     var userToken = req.query.token;
+    console.log(startTime);
+    console.log(endTime);
     var data = {
         status : false,
         message :""
@@ -345,13 +354,14 @@ router.post('/add-item',function(req,res){
                 }else{
                     var userId = rows[0].user_id;
                     project.setCreator(userId);
-                    db.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_describe,project_signup_max) ' +
-                    'VALUES ('+ project.getCategory()+','+project.getProjectStatus()+','+project.getCreator()+',"'+project.getName()+'",' +
-                    '"'+project.getContent()+'",'+project.getPeople()+')',function(err , row){
+                    console.log(project.getPeople());
+                    db.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_describe,project_signup_max,project_start,project_end) ' +
+                    ' VALUES (4,'+project.getProjectStatus()+','+project.getCreator()+',"'+project.getName()+'",' +
+                    '"'+project.getContent()+'",'+project.getPeople()+',"'+startTime+'","'+endTime+'")',function(err , row){
                         if(err){
                             sendData(req,res,next,conn,err);
                         }else{
-                            data.message = (row.affectedRows == 1 )? "" : "插入失败";
+                            data.message = (row.affectedRows == 1 )? "插入成功" : "插入失败";
                             data.status = (row.affectedRows == 1) ? true : false;
                             res.send(data);//若有错误返回false
                             conn.release();
