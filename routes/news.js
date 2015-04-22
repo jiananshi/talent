@@ -97,5 +97,33 @@ router.get('/new-detail', function (req, res) {
     })
 });
 
+router.post('/new-read',function(req,res){
+    var db = req.db;
+    var id = req.query.id;
+    var data = {
+        status : false,
+        message :""
+    }
+    db.getConnection(function(err,conn){
+        if(err){
+            data.message = err;
+            res.send({"data" : data});
+        }else{
+            db.query('UPDATE news set news_readtimes = news_readtimes+1 WHERE news_id = '+id+' ',function(err,row){
+                if(err){
+                    data.message = err;
+                    conn.release();
+                    res.send({"data" : data});
+                }else{
+                    data.message = (row.affectedRows == 1)? "成功" : "失败";
+                    data.status = (row.affectedRows == 1)?true : false;
+                    conn.release();
+                    res.send({"data" : data});
+                }
+            })
+        }
+
+    })
+})
 module.exports = router;
 
