@@ -1,10 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var competitionModel = require('../model/competitionModel')
+var competitionModel = require('../model/competitionModel');
+var simpleCompetitionModel = require('../model/simpleCompetitionModel');
 
-//得到所有竞赛的信息(包括id，name，creator，createtime，endtime, people, content)
-router.get('/', function (req, res) {
+//得到指定竞赛的详细信息(包括id，name，creator，createtime，endtime, people, content)
+router.get('/competition-detail', function (req, res) {
     var db = req.db;
+    var id = req.query.id;
     var data = {
         status : false,
         message : ""
@@ -16,7 +18,7 @@ router.get('/', function (req, res) {
             data.message = err;
             res.send({'data': data});
         }else{
-            db.query('select id, name, createTime, endTime, people , content, creator from competition_info  ',function(err,rows){
+            db.query('select id, name, createTime, endTime, people , content, creator from competition_info where id = '+id+' ',function(err,rows){
                 if(err){
                     data.message = err;
                     res.send({'data' : data});
@@ -33,6 +35,39 @@ router.get('/', function (req, res) {
 
     })
 });
+
+router.get('/',function(req,res){
+    var db = req.db;
+    var id = req.query.id;
+    var data = {
+        status : false,
+        message : ""
+    };
+    var competition;
+    var result = [];
+    db.getConnection(function(err, conn){
+        if(err) {
+            data.message = err;
+            res.send({'data': data});
+        }else{
+            db.query('select id, name,endTime,creator from competition_info ',function(err,rows){
+                if(err){
+                    data.message = err;
+                    res.send({'data' : data});
+                }else{
+                    rows.forEach(function(row){
+                        competition = new simpleCompetitionModel(row.id, row.name, row.creator, row.endTime);
+                        result.push(competition);
+                    })
+                    res.send(result);
+                }
+            })
+            conn.release();
+        }
+
+    })
+
+})
 
 //处理报名竞赛，在competition_enroll表中插入记录
 router.post('/application-competition', function (req, res) {
