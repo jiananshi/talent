@@ -373,6 +373,128 @@ router.post('/add-item-student',function(req,res,next){
     })
 })
 
+//用户申报正式项目
+router.post('/add-item-school',function(req,res,next){
+    var db = req.db;
+    var userToken = req.query.token;
+    var name = req.query.name;
+    var startTimeStamp = req.query.startTime;
+    var endTimeStamp = req.query.endTime;
+    var source = req.query.source;
+    var category = req.query.category;
+    var aid = req.query.aid;
+    var background = req.query.background;
+    var describe = req.query.describe;
+    var innovation = req.query.innovation;
+    var plan = req.query.plan;
+    var prospect = req.query.prospect;
+    var budget = req.query.budget;
+    var resourcerequired = req.query.resourcerequired;
+    var member = eval(req.query.member);
+    var teacher = req.query.teacher;
+    var main = req.query.mainMember;
+    console.log(typeof main);
+    var mainMember = eval("(" + main + ")");//将字符串JSON转换成JSON Object
+    console.log(mainMember);
+    console.log(mainMember.id);
+    var newDate = new Date();
+    newDate.setTime(startTimeStamp * 1000);
+    var startTime = newDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    newDate.setTime(endTimeStamp * 1000);
+    var endTime = newDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    var project = new officialProjectModel(0,name,category,2,0,describe,0,startTime,endTime,[],source,aid,background,innovation,plan,prospect,budget,resourcerequired, member,teacher,mainMember,0);
+    db.getConnection(function (err, conn) {
+        if (err) sendData(req,res,next,conn,err);
+        //根据token选出userId
+        db.query('SELECT user_id FROM user WHERE user_token ="' + userToken + '"', function (err, rows) {
+            if (err) {
+                sendData(req, res, next, conn, err);
+            } else {
+                if (rows.length == 0) {
+                    sendData(req, res, next, conn, "请登录");
+                } else {
+                    var userId = rows[0].user_id;
+                    console.log(teacher);
+                    //根据老师名字获得老师id
+                    conn.query('SELECT user_id FROM user WHERE user_fullname ="'+teacher+'"',function(err,rows){
+                        var teacherId = rows[0].user_id;
+                        console.log(teacherId);
+                        //利用事务对project表和project_member表进行插入
+                        conn.beginTransaction(function(err){
+                            if(err){
+                                sendData(req,res,next,conn,err);
+                            }else{
+                               conn.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_start,' +
+                               'project_end,project_source,project_aid,project_background,project_describe,project_innovation,' +
+                               'project_plan,project_prospect,project_budget,project_resourcerequired)' +
+                               'VALUES ('+category+',0,'+userId+',"'+name+'","'+startTime+'","'+endTime+'",1,"'+aid+'",' +
+                                   '"'+background+'","'+describe+'","'+innovation+'","'+plan+'","'+prospect+'","'+budget+'","'+resourcerequired+'")',function(err,rows){
+                                       if(err){
+                                           conn.rollback(function() {
+                                               sendData(req,res,next,conn,err);
+                                           });
+                                       }
+                                       var insertId = rows.insertId;
+                                       console.log(insertId);
+                                       //在member表中插入项目和指导老师的对应关系
+                                       conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task) ' +
+                                       'VALUES ('+insertId+','+teacherId+',2,"指导老师")',function(err,rows){
+                                           if(err){
+                                               conn.rollback(function() {
+                                                   sendData(req,res,next,conn,err);
+                                               });
+                                           }
+                                           //插入队长
+                                           console.log(insertId);
+                                           conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task) ' +
+                                           'VALUES ('+insertId+','+mainMember.id+',1,"队长")',function(err,rows){
+                                               if(err){
+                                                   conn.rollback(function() {
+                                                       sendData(req,res,next,conn,err);
+                                                   });
+                                               }
+                                               console.log(rows.insertId);
+                                               for(var i in member){
+                                                   var memberId = member[i].id;
+                                                   console.log(memberId);
+                                                   conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task)' +
+                                                   'VALUES ('+insertId+','+memberId+',3,"队员")',function(err,rows){
+                                                       if(err){
+                                                           conn.rollback(function() {
+                                                               sendData(req,res,next,conn,err);
+                                                           });
+                                                       }
+                                                       if(i == member.length-1){
+                                                           conn.commit(function(err) {
+                                                               if (err) {
+                                                                   conn.rollback(function() {
+                                                                       sendData(req,res,next,conn,err);
+                                                                   });
+                                                               }
+                                                               console.log('success!');
+                                                               var data = {
+                                                                   status:true,
+                                                                   message : "申报成功"
+                                                               }
+                                                               res.send({"data":data});
+                                                           });
+                                                       }
+                                                   })
+                                               }
+                                           })
+
+                                       })
+                                   }
+                                )
+                            }
+                        })
+                    })
+                }
+            }
+        })
+    })
+})
+
 //获取所有的分类名字
 router.get('/project-category',function(req,res){
     var db = req.db;
