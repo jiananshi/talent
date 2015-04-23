@@ -4,7 +4,7 @@ var competitionModel = require('../model/competitionModel');
 var simpleCompetitionModel = require('../model/simpleCompetitionModel');
 
 //得到指定竞赛的详细信息(包括id，name，creator，createtime，endtime, people, content)
-router.get('/competition-detail', function (req, res) {
+router.get('/detail', function (req, res) {
     var db = req.db;
     var id = req.query.id;
     var data = {
@@ -70,7 +70,7 @@ router.get('/',function(req,res){
 })
 
 //处理报名竞赛，在competition_enroll表中插入记录
-router.post('/application-competition', function (req, res) {
+router.post('/application', function (req, res) {
     var db = req.db;
     var id = req.query.id;
     var token = req.query.token;

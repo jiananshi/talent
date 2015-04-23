@@ -50,7 +50,7 @@ router.get('/', function (req, res) {
     })
 });
 
-router.get('/new-detail', function (req, res) {
+router.get('/detail', function (req, res) {
     var db = req.db;
     var id = req.query.id;
     var category = req.query.category;
@@ -97,7 +97,7 @@ router.get('/new-detail', function (req, res) {
     })
 });
 
-router.post('/new-read',function(req,res){
+router.post('/read',function(req,res){
     var db = req.db;
     var id = req.query.id;
     var data = {

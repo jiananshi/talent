@@ -53,8 +53,7 @@ app.use(function(req,res,next){
 app.use('/', routes);
 app.use('/test', test);
 app.use('/project',project);
-app.use('/application-item',project);
-app.use('/new',news);
+app.use('/news',news);
 app.use('/competition', competition);
 app.use('/login', login);
 

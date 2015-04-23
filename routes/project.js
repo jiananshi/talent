@@ -184,7 +184,7 @@ router.get('/detail',function(req,res,next){
                                     if(row.length == 0) sendData(req,res,next,conn,err);
                                     else{
                                         var o = row[0];
-                                        officialProject = new officialProjectModel(id, o.projectName, o.categoryName,2, o.creatorName, o.contetn, o.people, o.startTime, o.endTime,[], o.source, o.aid, o.background, o.innovation, o.plan, o.prospect, o.budget, o.resourcerequired, [],"",{}, o.projectStatus);
+                                        officialProject = new officialProjectModel(id, o.projectName, o.categoryName,2, o.creatorName, o.content, o.people, o.startTime, o.endTime,[], o.source, o.aid, o.background, o.innovation, o.plan, o.prospect, o.budget, o.resourcerequired, [],"",{}, o.projectStatus);
                                         getDiscuss(req,res,function(discuss){
                                             officialProject.setDiscuss(discuss);
                                         })
@@ -258,7 +258,7 @@ router.get('/status' ,function(req,res,next){
 });
 
 //用于处理用户申请加入指定项目
-router.post('/', function (req, res) {
+router.post('/application', function (req, res) {
     var db = req.db;
     var token = req.query.token;//用户token
     var id = req.query.id;//申请项目id
