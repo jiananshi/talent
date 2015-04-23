@@ -61,7 +61,7 @@ function getDiscuss(req,res,callback){
                 if(rows.length == 0) discuss = [];
                 else{
                     for(var i in rows){
-                        comment = new discussModel(rows[i].userId,rows[i].userName,rows[i].content,common.makeDate(rows[i].createTime));
+                        comment = new discussModel(rows[i].userId,rows[i].userName,rows[i].content,rows[i].createTime);
                         discuss.push(comment);
                     }
                 }
