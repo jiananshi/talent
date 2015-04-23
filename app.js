@@ -12,7 +12,8 @@ var connection = mysql.createPool({
   user     : 'root',
   password : '12345',
   database: 'talent',
-  port: 3306
+  port: 3306,
+    connectionLimit:1000
 });
 
 var routes = require('./routes/index');

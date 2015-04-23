@@ -87,18 +87,18 @@ router.get('/', function (req, res,next) {
         if (err)  sendData(req,res,next,conn,err);
         else {
             //取出所有项目简短信息
-            db.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator, startTime,endTime FROM project_info WHERE projectStatus in (3,4,6,7,8,9)', function (err, rows) {
+            conn.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator, startTime,endTime FROM project_info WHERE projectStatus in (3,4,6,7,8,9)', function (err, rows) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
                     for (var i in rows) {
-
                         //新建project对象
                         simpleProject = new simpleProjectModel(rows[i].id, rows[i].name, rows[i].category, rows[i].creator,rows[i].startTime,rows[i].endTime, rows[i].status);
                         result.push(simpleProject);
                     }
-                    res.send(result);
                     conn.release();
+                    res.send(result);
+
                 }
             })
         }
@@ -130,14 +130,14 @@ router.get('/detail',function(req,res,next){
     db.getConnection(function(err, conn){
         if(err) sendData(req,res,next,conn,err);
         else {
-            db.query('SELECT categoryId FROM project_info WHERE projectId = ' + id + '', function (err, raw) {
+            conn.query('SELECT categoryId FROM project_info WHERE projectId = ' + id + '', function (err, raw) {
                 if (err) sendData(req, res, next, conn, err);
                 else {
                     if (raw.length == 0) sendData(req, res, next, conn, "该项目id不存在");
                     else {
                         var category = raw[0].categoryId;
                         if (category == 4) {//说明是自创项目
-                            db.query('SELECT projectName,categoryName,startTime,endTime,funding,creatorName,people,content,projectStatus,planmoney FROM project_info WHERE projectId = ' + id + '', function (err, raw) {
+                            conn.query('SELECT projectName,categoryName,startTime,endTime,funding,creatorName,people,content,projectStatus,planmoney FROM project_info WHERE projectId = ' + id + '', function (err, raw) {
                                 if (err) sendData(req, res, next, conn, err);
                                 else{
                                     var free = raw[0];
@@ -166,12 +166,14 @@ router.get('/detail',function(req,res,next){
                                                         allCrowfunding.realMoney = row[0].realmoney;
                                                         freeProject.setAllCrowdfunding(allCrowfunding);
                                                     }
+                                                    conn.release();
                                                     res.send(freeProject);
                                                 })
 
                                             }
                                         })
                                     }else{
+                                        conn.release();
                                         res.send(freeProject);
                                     }
                                 }
@@ -192,8 +194,6 @@ router.get('/detail',function(req,res,next){
                                             if(err) sendData(req,res,next,conn,err);
                                             else{
                                                 for(var i in rows){
-                                                    console.log(rows[i]);
-                                                    console.log(rows[i].role);
                                                     var projectMember =new memberModel(rows[i].userId,rows[i].userName);
                                                     if(rows[i].role == 1){
                                                         officialProject.setMainMember(projectMember);
@@ -205,6 +205,7 @@ router.get('/detail',function(req,res,next){
                                                     }
                                                 }
                                                 officialProject.setMember(member);
+                                                conn.release();
                                                 res.send(officialProject);
                                             }
                                         })
