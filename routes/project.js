@@ -61,7 +61,7 @@ function getDiscuss(req,res,callback){
                 if(rows.length == 0) discuss = [];
                 else{
                     for(var i in rows){
-                        comment = new discussModel(rows[i].userId,rows[i].userName,rows[i].content,rows[i].createTime);
+                        comment = new discussModel(rows[i].userId,rows[i].userName,rows[i].content,common.makeDate(rows[i].createTime));
                         discuss.push(comment);
                     }
                 }
@@ -92,6 +92,7 @@ router.get('/', function (req, res,next) {
                     sendData(req, res, next, conn, err);
                 } else {
                     for (var i in rows) {
+
                         //新建project对象
                         simpleProject = new simpleProjectModel(rows[i].id, rows[i].name, rows[i].category, rows[i].creator,rows[i].startTime,rows[i].endTime, rows[i].status);
                         result.push(simpleProject);
@@ -105,7 +106,7 @@ router.get('/', function (req, res,next) {
 });
 
 //根据id返回项目详细信息，自创与学校项目返回的不同
-router.get('/project-detail',function(req,res,next){
+router.get('/detail',function(req,res,next){
     var db = req.db;
     var id = req.query.id;
     var freeProject;
@@ -125,7 +126,6 @@ router.get('/project-detail',function(req,res,next){
     var mainMember;
     var member =[];
     var teacher;
-    console.log("aaa");
     //根据id判断是否为自创项目
     db.getConnection(function(err, conn){
         if(err) sendData(req,res,next,conn,err);
@@ -222,7 +222,7 @@ router.get('/project-detail',function(req,res,next){
 })
 
 //得到用户在指定项目中的状态（0为未报名，1为审核中，2为审核通过，3为审核未通过）
-router.get('/project-status' ,function(req,res,next){
+router.get('/status' ,function(req,res,next){
     var db = req.db;
     var projectId = req.query.id;
     var userToken = req.query.token;
@@ -336,8 +336,6 @@ router.post('/add-item-student',function(req,res,next){
     newDate.setTime(endTimeStamp * 1000);
     var endTime = newDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
     var userToken = req.query.token;
-    console.log(startTime);
-    console.log(endTime);
     var data = {
         status : false,
         message :""
@@ -391,6 +389,9 @@ router.post('/add-item-school',function(req,res,next){
     var budget = req.query.budget;
     var resourcerequired = req.query.resourcerequired;
     var member = eval(req.query.member);
+    for(var i in member){
+        console.log(member[i].id);
+    }
     var teacher = req.query.teacher;
     var main = req.query.mainMember;
     console.log(typeof main);
@@ -496,7 +497,7 @@ router.post('/add-item-school',function(req,res,next){
 })
 
 //获取所有的分类名字
-router.get('/project-category',function(req,res){
+router.get('/category',function(req,res){
     var db = req.db;
     var data = {
         status : false,
