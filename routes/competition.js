@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var competitionModel = require('../model/competitionModel');
 var simpleCompetitionModel = require('../model/simpleCompetitionModel');
+var common = require('../model/common');
 
 //得到指定竞赛的详细信息(包括id，name，creator，createtime，endtime, people, content)
 router.get('/detail', function (req, res) {
@@ -24,7 +25,7 @@ router.get('/detail', function (req, res) {
                     res.send({'data' : data});
                 }else{
                     rows.forEach(function(row){
-                        competition = new competitionModel(row.id, row.name, row.creator, row.content, row.createTime ,row.endTime, row.people);
+                        competition = new competitionModel(row.id, row.name, row.creator, row.content, common.makeDate(row.createTime) ,common.makeDate(row.endTime), row.people);
                         result.push(competition);
                     })
                     res.send(result);
@@ -56,7 +57,7 @@ router.get('/',function(req,res){
                     res.send({'data' : data});
                 }else{
                     rows.forEach(function(row){
-                        competition = new simpleCompetitionModel(row.id, row.name, row.creator, row.endTime);
+                        competition = new simpleCompetitionModel(row.id, row.name, row.creator,common.makeDate( row.endTime));
                         result.push(competition);
                     })
                     res.send(result);

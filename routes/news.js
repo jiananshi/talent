@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var newsModel = require('../model/newsModel')
 var newsDetailModel = require('../model/newsDetailModel');
+var common = require('../model/common');
 
 //得到所有状态为已发布的新闻/通知的简单信息(包括id，name，imgurl，time，readtime)
 router.get('/', function (req, res) {
@@ -26,7 +27,7 @@ router.get('/', function (req, res) {
                 conn.release();
             }else{
                 for(var i in rows){
-                    var news = newsModel(rows[i].id, rows[i].name,1,rows[i].imgUrl,rows[i].content.substr(0,40),rows[i].time,rows[i].readTimes);
+                    var news = newsModel(rows[i].id, rows[i].name,1,rows[i].imgUrl,rows[i].content.substr(0,40),common.makeDate(rows[i].time),rows[i].readTimes);
                     result.push(news);
                 }
                 db.query('SELECT notice_id as id,notice_title as name,notice_content as content,notice_createtime as time FROM notice WHERE notice_status = 0 ',function(err,rows){
@@ -37,7 +38,7 @@ router.get('/', function (req, res) {
                         conn.release();
                     }else{
                         for(var i in rows){
-                            var news = newsModel(rows[i].id, rows[i].name,2,"",rows[i].content.substr(0,40),rows[i].time,"");
+                            var news = newsModel(rows[i].id, rows[i].name,2,"",rows[i].content.substr(0,40),common.makeDate(rows[i].time),"");
                             result.push(news);
                         }
                         res.send(result);
@@ -74,7 +75,7 @@ router.get('/detail', function (req, res) {
                         res.send({'data' : data});
                         conn.release();
                     }else{
-                         news = newsDetailModel(rows[0].id, rows[0].name,1,rows[0].imgUrl,rows[0].content,rows[0].time,rows[0].readTimes);
+                         news = newsDetailModel(rows[0].id, rows[0].name,1,rows[0].imgUrl,rows[0].content,common.makeDate(rows[0].time),rows[0].readTimes);
                         res.send(news);
                         conn.release();
                     }
@@ -87,7 +88,7 @@ router.get('/detail', function (req, res) {
                         res.send({'data' : data});
                         conn.release();
                     }else{
-                         news = newsDetailModel(rows[0].id, rows[0].name,2,"",rows[0].content,rows[0].time,"");
+                         news = newsDetailModel(rows[0].id, rows[0].name,2,"",rows[0].content,common.makeDate(rows[0].time),"");
                         res.send(news);
                         conn.release();
                     }

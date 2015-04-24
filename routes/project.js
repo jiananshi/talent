@@ -61,7 +61,7 @@ function getDiscuss(req,res,callback){
                 if(rows.length == 0) discuss = [];
                 else{
                     for(var i in rows){
-                        comment = new discussModel(rows[i].userId,rows[i].userName,rows[i].content,rows[i].createTime);
+                        comment = new discussModel(rows[i].userId,rows[i].userName,rows[i].content,common.makeDate(rows[i].createTime));
                         discuss.push(comment);
                     }
                 }
@@ -93,7 +93,7 @@ router.get('/', function (req, res,next) {
                 } else {
                     for (var i in rows) {
                         //新建project对象
-                        simpleProject = new simpleProjectModel(rows[i].id, rows[i].name, rows[i].category, rows[i].creator,rows[i].startTime,rows[i].endTime, rows[i].status);
+                        simpleProject = new simpleProjectModel(rows[i].id, rows[i].name, rows[i].category, rows[i].creator,common.makeDate(rows[i].startTime),common.makeDate(rows[i].endTime), rows[i].status);
                         result.push(simpleProject);
                     }
                     conn.release();
@@ -141,7 +141,7 @@ router.get('/detail',function(req,res,next){
                                 if (err) sendData(req, res, next, conn, err);
                                 else{
                                     var free = raw[0];
-                                    freeProject = new freeProjectModel(id,free.projectName,free.categoryName,1,free.startTime,free.endTime,free.funding,free.creatorName,free.people,free.content,[],{},free.projectStatus);
+                                    freeProject = new freeProjectModel(id,free.projectName,free.categoryName,1,common.makeDate(free.startTime),common.makeDate(free.endTime),free.funding,free.creatorName,free.people,free.content,[],{},free.projectStatus);
                                     //根据id获取项目的评论
                                    getDiscuss(req,res,function(discuss){
                                         freeProject.setDiscuss(discuss);
@@ -186,7 +186,7 @@ router.get('/detail',function(req,res,next){
                                     if(row.length == 0) sendData(req,res,next,conn,err);
                                     else{
                                         var o = row[0];
-                                        officialProject = new officialProjectModel(id, o.projectName, o.categoryName,2, o.creatorName, o.content, o.people, o.startTime, o.endTime,[], o.source, o.aid, o.background, o.innovation, o.plan, o.prospect, o.budget, o.resourcerequired, [],"",{}, o.projectStatus);
+                                        officialProject = new officialProjectModel(id, o.projectName, o.categoryName,2, o.creatorName, o.content, o.people, common.makeDate(o.startTime),common.makeDate( o.endTime),[], o.source, o.aid, o.background, o.innovation, o.plan, o.prospect, o.budget, o.resourcerequired, [],"",{}, o.projectStatus);
                                         getDiscuss(req,res,function(discuss){
                                             officialProject.setDiscuss(discuss);
                                         })

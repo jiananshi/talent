@@ -28,11 +28,15 @@ exports.objClone = function cloneObject(src) {
 };
 
 exports.makeDate = function makeDate(date) {
-  if (date.length > 10) {
-    return date.toISOString().
-        replace(/T/, ' ').
-        replace(/\..+/, '');
-  } else {
-    return "";
-  }
+    try {
+        var date = new Date(date).toISOString().
+            replace(/T/, ' ').
+            replace(/\..+/, '');
+    }catch(e){
+        console.log(e);
+        var date = "0000-00-00 00:00:00";
+    }finally{
+        return date;
+    }
+
 };
