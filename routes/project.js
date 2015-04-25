@@ -55,7 +55,7 @@ function getDiscuss(req,res,callback){
     var comment;
     var discuss = [];
     db.getConnection(function(err,conn){
-        db.query('SELECT * FROM comment_info WHERE project_id = '+id+'',function(err,rows){
+        db.query('SELECT * FROM comment_info WHERE project_id = '+id+' ORDER BY createTime',function(err,rows){
             if(err) sendData(req,res,next,conn,err);
             else{
                 if(rows.length == 0) discuss = [];
@@ -87,7 +87,7 @@ router.get('/', function (req, res,next) {
         if (err)  sendData(req,res,next,conn,err);
         else {
             //取出所有项目简短信息
-            conn.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator, startTime,endTime FROM project_info WHERE projectStatus in (3,4,6,7,8,9)', function (err, rows) {
+            conn.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator, startTime,endTime FROM project_info WHERE projectStatus in (3,4,6,7,8,9) ORDER BY createTime', function (err, rows) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {

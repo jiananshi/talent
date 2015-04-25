@@ -40,6 +40,7 @@ exports.makeDate = function makeDate(date) {
         var minutes = newDate.getMinutes() < 10 ? '0' + newDate.getMinutes() : newDate.getMinutes();
         //在小于10的秒数前补0
         var seconds = newDate.getSeconds() < 10 ? '0' + newDate.getSeconds(): newDate.getSeconds();
+        //拼接时间
         var stringDate = newDate.getFullYear() + '-' + month + '-' + day + " " + hours + ":" + minutes + ":" + seconds;
     }catch(e){
         var stringDate = "0000-00-00 00:00:00";
