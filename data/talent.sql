@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-04-25 15:59:42
+Date: 2015-04-25 19:09:06
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,7 @@ CREATE TABLE `comment` (
   `content` text NOT NULL,
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of comment
@@ -36,8 +36,11 @@ INSERT INTO comment VALUES ('3', '11', '7', '怎么可以这么有创意', '2015
 INSERT INTO comment VALUES ('4', '11', '8', '加我一个加我一个', '2015-04-20 19:33:27');
 INSERT INTO comment VALUES ('5', '1', '1', '细化喜欢小', '2015-04-20 21:49:41');
 INSERT INTO comment VALUES ('6', '11', '10', '这么做不科学吧', '2015-04-21 21:44:45');
-INSERT INTO comment VALUES ('7', '1', '10', '很好', '2015-04-21 22:53:39');
+INSERT INTO comment VALUES ('7', '1', '10', '很好', '2015-04-18 22:53:39');
 INSERT INTO comment VALUES ('8', '1', '1', '一般吧', '2015-04-25 15:51:18');
+INSERT INTO comment VALUES ('9', '1', '1', '一般吧', '2015-04-25 16:11:18');
+INSERT INTO comment VALUES ('10', '1', '1', '一般吧', '2015-04-25 17:05:02');
+INSERT INTO comment VALUES ('11', '11', '1', '一般吧', '2015-04-25 17:41:16');
 
 -- ----------------------------
 -- Table structure for `competition`
@@ -287,7 +290,7 @@ CREATE TABLE `funding` (
   `money` int(11) NOT NULL,
   `createTime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of funding
@@ -297,6 +300,7 @@ INSERT INTO funding VALUES ('2', '11', '7', '有创意，支持', '10', '2015-04
 INSERT INTO funding VALUES ('3', '11', '8', '怎么可以这么棒', '3', '2015-03-30 23:27:57');
 INSERT INTO funding VALUES ('4', '12', '10', '很喜欢这个项目', '100', '2015-04-25 23:28:00');
 INSERT INTO funding VALUES ('5', '11', '10', '喜欢就捐了', '100', '2015-04-21 23:37:40');
+INSERT INTO funding VALUES ('6', '11', '1', '一般吧', '1000', '2015-04-25 17:41:50');
 
 -- ----------------------------
 -- Table structure for `major`
@@ -871,7 +875,7 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO user VALUES ('1', '1', '1', '1', '1', '1', 'axt', 'anxiaoting', '10112510218', '2011', '218', 'xxx', 'xxx', 'xxx', 'xxx', '218@ecnu.edu.cn', 'xxx', 'xxx', '18888888218', 'xxx', '70f43a2ff16d1029edb5983f27a6b0a3bf317a61', '0', null);
+INSERT INTO user VALUES ('1', '1', '1', '1', '1', '1', 'axt', 'anxiaoting', '10112510218', '2011', '218', 'xxx', 'xxx', 'xxx', 'xxx', '218@ecnu.edu.cn', 'xxx', 'xxx', '18888888218', 'xxx', '8fa8ad35149afa22e2558c3d63de42b259c5c68c', '0', null);
 INSERT INTO user VALUES ('2', '1', '1', '1', '1', 'zy', 'zy', 'zhouyue', '10112510220', '2011', '220', '', '', '', '', '220@ecnu.edu.cn', '', '', '18888888220', '', '', '0', null);
 INSERT INTO user VALUES ('3', '1', '1', '1', '1', 'yf', 'yf', 'yufang', '10112510228', '2011', '228', '', '', '', '', '280@ecnu.edu.cn', '', '', '18888888228', '', '', '0', null);
 INSERT INTO user VALUES ('4', '1', '1', '1', '1', 'yhp', 'yhp', 'yuhaiping', '10112510201', '2011', '201', '', '', '', '', '201@ecnu.edu.cn', '', '', '18888888201', '', '', '0', null);
@@ -1013,7 +1017,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `project_info`
 -- ----------------------------
 DROP VIEW IF EXISTS `project_info`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `project_info` AS select `project`.`project_id` AS `projectId`,`project`.`project_category_id` AS `categoryId`,`project`.`project_status` AS `projectStatus`,`project_category`.`project_category_name` AS `categoryName`,`project_category`.`project_category_description` AS `categoryDescription`,`project_status`.`project_status_name` AS `projectStatusName`,`project`.`project_creator_id` AS `creatorId`,`user`.`user_fullname` AS `creatorName`,`project`.`project_name` AS `projectName`,`project`.`project_start` AS `startTime`,`project`.`project_end` AS `endTime`,`project`.`project_signup_max` AS `people`,`project`.`project_describe` AS `content`,`project`.`project_funding` AS `funding`,`project`.`project_researchobject` AS `researchobject`,`project`.`project_source` AS `source`,`project`.`project_subject` AS `subject`,`project`.`project_aid` AS `aid`,`project`.`project_background` AS `background`,`project`.`project_innovation` AS `innovation`,`project`.`project_plan` AS `plan`,`project`.`project_prospect` AS `prospect`,`project`.`project_budget` AS `budget`,`project`.`project_resourcerequired` AS `resourcerequired`,`project`.`project_grouptype` AS `grouptype`,`project`.`project_summary` AS `summary`,`project`.`project_institutionopinion` AS `institutionopinion`,`project`.`project_departmentopinion` AS `departmentopinion`,`project`.`project_teacheropinion` AS `teacheropinion`,`project`.`project_funding_planmoney` AS `planmoney` from (((`project` join `project_category`) join `project_status`) join `user`) where ((`project`.`project_category_id` = `project_category`.`project_category_id`) and (`project`.`project_status` = `project_status`.`project_status_id`) and (`project`.`project_creator_id` = `user`.`user_id`));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `project_info` AS select `project`.`project_id` AS `projectId`,`project`.`project_category_id` AS `categoryId`,`project`.`project_status` AS `projectStatus`,`project_category`.`project_category_name` AS `categoryName`,`project_category`.`project_category_description` AS `categoryDescription`,`project_status`.`project_status_name` AS `projectStatusName`,`project`.`project_creator_id` AS `creatorId`,`user`.`user_fullname` AS `creatorName`,`project`.`project_name` AS `projectName`,`project`.`project_start` AS `startTime`,`project`.`project_end` AS `endTime`,`project`.`project_signup_max` AS `people`,`project`.`project_describe` AS `content`,`project`.`project_funding` AS `funding`,`project`.`project_researchobject` AS `researchobject`,`project`.`project_source` AS `source`,`project`.`project_subject` AS `subject`,`project`.`project_aid` AS `aid`,`project`.`project_background` AS `background`,`project`.`project_innovation` AS `innovation`,`project`.`project_plan` AS `plan`,`project`.`project_prospect` AS `prospect`,`project`.`project_budget` AS `budget`,`project`.`project_resourcerequired` AS `resourcerequired`,`project`.`project_grouptype` AS `grouptype`,`project`.`project_summary` AS `summary`,`project`.`project_institutionopinion` AS `institutionopinion`,`project`.`project_departmentopinion` AS `departmentopinion`,`project`.`project_teacheropinion` AS `teacheropinion`,`project`.`project_funding_planmoney` AS `planmoney`,`project`.`project_createtime` AS `createTime` from (((`project` join `project_category`) join `project_status`) join `user`) where ((`project`.`project_category_id` = `project_category`.`project_category_id`) and (`project`.`project_status` = `project_status`.`project_status_id`) and (`project`.`project_creator_id` = `user`.`user_id`));
 
 -- ----------------------------
 -- View structure for `project_user_info`
