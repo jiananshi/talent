@@ -56,7 +56,7 @@ function getDiscuss(req,res,callback){
     var discuss = [];
     db.getConnection(function(err,conn){
         db.query('SELECT * FROM comment_info WHERE project_id = '+id+' ORDER BY createTime',function(err,rows){
-            if(err) sendData(req,res,next,conn,err);
+            if(err) sendData(req,res,"",conn,err);
             else{
                 if(rows.length == 0) discuss = [];
                 else{
@@ -66,7 +66,6 @@ function getDiscuss(req,res,callback){
                     }
                 }
                 callback(discuss);
-
             }
 
         })
@@ -145,37 +144,36 @@ router.get('/detail',function(req,res,next){
                                     //根据id获取项目的评论
                                    getDiscuss(req,res,function(discuss){
                                         freeProject.setDiscuss(discuss);
+                                       if(free.funding == 1) {//1说明是众筹项目
+                                           allCrowfunding.planMoney = free.planmoney;
+                                           //根据id获取众筹信息
+                                           db.query('SELECT userId,userName,content,money FROM funding_info WHERE projectId = ' + id + '', function (err, rows) {
+                                               if (err) sendData(req, res, next, conn, err);
+                                               else {
+                                                   for (var i in rows) {
+                                                       funding = new fundingModel(rows[i].userId, rows[i].userName, rows[i].content, rows[i].money);
+                                                       allFunding.push(funding);
+
+                                                   }
+                                                   allCrowfunding.crowfunding=allFunding;
+                                                   db.query('select count(DISTINCT userId) as people, (case when sum(money) is null then 0 else sum(money) end) as realmoney from funding_info where projectId = '+id+'',function(err,row){
+                                                       if(err) sendData(req,res,next,conn,err);
+                                                       else{
+                                                           allCrowfunding.people = row[0].people;
+                                                           allCrowfunding.realMoney = row[0].realmoney;
+                                                           freeProject.setAllCrowdfunding(allCrowfunding);
+                                                       }
+                                                       conn.release();
+                                                       res.send(freeProject);
+                                                   })
+
+                                               }
+                                           })
+                                       }else{
+                                           conn.release();
+                                           res.send(freeProject);
+                                       }
                                     });
-                                    if(free.funding == 1) {//1说明是众筹项目
-
-                                        allCrowfunding.planMoney = free.planmoney;
-                                        //根据id获取众筹信息
-                                        db.query('SELECT userId,userName,content,money FROM funding_info WHERE projectId = ' + id + '', function (err, rows) {
-                                            if (err) sendData(req, res, next, conn, err);
-                                            else {
-                                                for (var i in rows) {
-                                                    funding = new fundingModel(rows[i].userId, rows[i].userName, rows[i].content, rows[i].money);
-                                                    allFunding.push(funding);
-
-                                                }
-                                                allCrowfunding.crowfunding=allFunding;
-                                                db.query('select count(DISTINCT userId) as people, (case when sum(money) is null then 0 else sum(money) end) as realmoney from funding_info where projectId = '+id+'',function(err,row){
-                                                    if(err) sendData(req,res,next,conn,err);
-                                                    else{
-                                                        allCrowfunding.people = row[0].people;
-                                                        allCrowfunding.realMoney = row[0].realmoney;
-                                                        freeProject.setAllCrowdfunding(allCrowfunding);
-                                                    }
-                                                    conn.release();
-                                                    res.send(freeProject);
-                                                })
-
-                                            }
-                                        })
-                                    }else{
-                                        conn.release();
-                                        res.send(freeProject);
-                                    }
                                 }
                             })
                         } else {//说明是正式项目
@@ -189,30 +187,28 @@ router.get('/detail',function(req,res,next){
                                         officialProject = new officialProjectModel(id, o.projectName, o.categoryName,2, o.creatorName, o.content, o.people, common.makeDate(o.startTime),common.makeDate( o.endTime),[], o.source, o.aid, o.background, o.innovation, o.plan, o.prospect, o.budget, o.resourcerequired, [],"",{}, o.projectStatus);
                                         getDiscuss(req,res,function(discuss){
                                             officialProject.setDiscuss(discuss);
-                                        })
-                                        db.query('SELECT * from member_info WHERE projectId = '+id+'',function(err,rows){
-                                            if(err) sendData(req,res,next,conn,err);
-                                            else{
-                                                for(var i in rows){
-                                                    var projectMember =new memberModel(rows[i].userId,rows[i].userName);
-                                                    if(rows[i].role == 1){
-                                                        officialProject.setMainMember(projectMember);
-                                                    }else if(rows[i].role == 2){
-                                                        officialProject.setTeacher(rows[i].userName);
+                                            db.query('SELECT * from member_info WHERE projectId = '+id+'',function(err,rows){
+                                                if(err) sendData(req,res,next,conn,err);
+                                                else{
+                                                    for(var i in rows){
+                                                        var projectMember =new memberModel(rows[i].userId,rows[i].userName);
+                                                        if(rows[i].role == 1){
+                                                            officialProject.setMainMember(projectMember);
+                                                        }else if(rows[i].role == 2){
+                                                            officialProject.setTeacher(rows[i].userName);
+                                                        }
+                                                        else {
+                                                            member.push(projectMember);
+                                                        }
                                                     }
-                                                    else {
-                                                        member.push(projectMember);
-                                                    }
+                                                    officialProject.setMember(member);
+                                                    conn.release();
+                                                    res.send(officialProject);
                                                 }
-                                                officialProject.setMember(member);
-                                                conn.release();
-                                                res.send(officialProject);
-                                            }
+                                            })
                                         })
                                     }
                                 }
-
-
                             })
                         }
                     }
@@ -578,7 +574,6 @@ router.post('/discuss',function(req,res,next){
                         sendData(req,res,next,conn,"请重新登陆");
                     }else{
                         var userId = row[0].user_id;
-                        console.log(userId);
                         db.query('INSERT INTO comment (project_id,user_id,content) VALUES ('+id+','+userId+',"'+content+'")',function(err,row){
                             if(err) sendData(req,res,next,conn,err);
                             else{
@@ -589,6 +584,7 @@ router.post('/discuss',function(req,res,next){
                                         status : true,
                                         message : "评论成功"
                                     }
+                                    conn.release();
                                     res.send({"data":data});
                                 }
                             }
