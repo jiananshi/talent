@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-04-24 11:02:08
+Date: 2015-04-25 10:27:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -70,21 +70,14 @@ CREATE TABLE `competition_enroll` (
   `competition_enroll_foo_id` int(11) NOT NULL,
   `createtime` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='竞赛报名表';
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='竞赛报名表';
 
 -- ----------------------------
 -- Records of competition_enroll
 -- ----------------------------
 INSERT INTO competition_enroll VALUES ('11', '1', '10', '2015-04-09 20:40:27');
-INSERT INTO competition_enroll VALUES ('12', '1', '10', '2015-04-09 20:43:27');
-INSERT INTO competition_enroll VALUES ('13', '1', '10', '2015-04-09 20:54:05');
-INSERT INTO competition_enroll VALUES ('14', '1', '10', '2015-04-09 20:54:07');
-INSERT INTO competition_enroll VALUES ('15', '1', '10', '2015-04-09 20:54:08');
-INSERT INTO competition_enroll VALUES ('16', '1', '10', '2015-04-09 20:54:09');
-INSERT INTO competition_enroll VALUES ('17', '1', '10', '2015-04-09 20:55:27');
-INSERT INTO competition_enroll VALUES ('18', '1', '10', '2015-04-09 20:55:28');
-INSERT INTO competition_enroll VALUES ('19', '1', '10', '2015-04-09 20:59:28');
-INSERT INTO competition_enroll VALUES ('20', '1', '10', '2015-04-09 21:11:48');
+INSERT INTO competition_enroll VALUES ('12', '2', '7', '2015-04-24 21:47:57');
+INSERT INTO competition_enroll VALUES ('21', '2', '10', '2015-04-24 21:52:10');
 
 -- ----------------------------
 -- Table structure for `competition_to_project`
@@ -602,8 +595,6 @@ INSERT INTO project VALUES ('10', '3', '4', '2015-04-24 00:42:14', '10', '智能
 INSERT INTO project VALUES ('11', '4', '7', '2015-04-24 00:42:24', '1', '美食点评数据分析系统', '2015-03-30 00:42:15', '2015-05-09 00:42:20', '2', '1', '网络工程', '大众点评资助', '想知道附近有什么美食评价高。', '哪家餐厅好吃呢~来看大家的点评把~', '智能美食推荐', '测试计划v2.0', '软件开发', '10000', '电脑&手机', null, null, null, '提前预定座位', '7', '研究生', '1', '200000');
 INSERT INTO project VALUES ('12', '4', '8', '2015-04-24 00:42:43', '8', '股票分析系统', '2015-03-31 00:42:25', '2015-05-09 00:42:31', '1', '2', '软件工程', '银联资助', '初入股市的股民需要一个聪明的分析系统。', '哪只股票最近会涨？其实我也不知道。。。但是它知道！', '股市操盘手', '测试报告v1.0', '论文', '9000', 'ipad', null, null, null, '分析股市大盘趋势', '6', '研究生', '1', '5000');
 INSERT INTO project VALUES ('13', '4', '9', '2015-04-24 00:42:54', '10', '随心之旅自由行定制系统', '2015-03-31 00:42:43', '2015-05-09 00:42:50', '2', '1', '软件工程', '携程资助', '出去玩需要制定旅行计划。', '想去哪儿~基于谷歌地图为您绘制最佳自由行路线~', '去哪儿？去啊！', '系统发布', '专利', '10000', '电脑', null, null, null, '智能定制计划', '5', '研究生', '2', '0');
-INSERT INTO project VALUES ('47', '1', '3', '2015-04-24 10:35:44', '10', '滑雪项目', '2014-06-18 02:33:24', '2014-06-18 02:33:24', null, '1', '', '爱丽自助', '背景', 'undefined', '创新', '进度', '计划', '10000', '实验室', null, null, null, '', '0', '', '0', '0');
-INSERT INTO project VALUES ('48', '1', '3', '2015-04-24 10:36:01', '10', '滑雪项目', '0000-00-00 00:00:00', '2014-06-18 02:33:24', null, '1', '', '爱丽自助', '背景', 'undefined', '创新', '进度', '计划', '10000', '实验室', null, null, null, '', '0', '', '0', '0');
 
 -- ----------------------------
 -- Table structure for `project_category`
@@ -680,14 +671,6 @@ INSERT INTO project_member VALUES ('30', '10', '6', '3', '队员', null, '0', nu
 INSERT INTO project_member VALUES ('32', '11', '2', '0', '', null, '1', '我对这个项目很感兴趣，希望可以加入');
 INSERT INTO project_member VALUES ('33', '12', '3', '0', '', null, '2', '我会spring希望可以加入');
 INSERT INTO project_member VALUES ('34', '13', '4', '0', '', null, '1', '我是全栈工程师，求加入。');
-INSERT INTO project_member VALUES ('75', '47', '11', '2', '指导老师', null, '0', null);
-INSERT INTO project_member VALUES ('76', '47', '1', '1', '队长', null, '0', null);
-INSERT INTO project_member VALUES ('77', '47', '1', '3', '队员', null, '0', null);
-INSERT INTO project_member VALUES ('78', '47', '2', '3', '队员', null, '0', null);
-INSERT INTO project_member VALUES ('79', '48', '11', '2', '指导老师', null, '0', null);
-INSERT INTO project_member VALUES ('80', '48', '1', '1', '队长', null, '0', null);
-INSERT INTO project_member VALUES ('81', '48', '1', '3', '队员', null, '0', null);
-INSERT INTO project_member VALUES ('82', '48', '2', '3', '队员', null, '0', null);
 
 -- ----------------------------
 -- Table structure for `project_period`
@@ -851,27 +834,28 @@ INSERT INTO test VALUES ('4', 'asd');
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(255) NOT NULL auto_increment,
-  `user_grade_id` int(255) NOT NULL COMMENT '学生的年级、教师的职称等',
-  `user_gender_id` int(255) NOT NULL,
-  `department_id` int(255) NOT NULL COMMENT '院系或者所在单位的id',
-  `major_id` int(255) NOT NULL,
+  `user_grade_id` int(255) default NULL COMMENT '学生的年级、教师的职称等',
+  `user_gender_id` int(255) default NULL,
+  `department_id` int(255) default NULL COMMENT '院系或者所在单位的id',
+  `major_id` int(255) default NULL,
   `user_password` varchar(50) NOT NULL,
   `user_name` varchar(20) NOT NULL,
   `user_fullname` varchar(255) NOT NULL,
-  `user_studentnumber` varchar(255) NOT NULL,
-  `user_admissionyear` year(4) NOT NULL COMMENT '入学年份',
-  `user_idcardnumber` varchar(20) NOT NULL,
-  `user_job` varchar(255) NOT NULL COMMENT '可用于教师职务等',
-  `user_researchinterests` varchar(255) NOT NULL COMMENT '可用于研究方向、兴趣等',
-  `user_address` varchar(255) NOT NULL COMMENT '常住地址，当然不是寝室地址',
-  `user_dormitory` varchar(100) NOT NULL COMMENT '寝室地址',
-  `user_email1` varchar(255) NOT NULL,
-  `user_email2` varchar(255) NOT NULL,
-  `user_qq` varchar(50) NOT NULL COMMENT 'QQ',
-  `user_phone1` varchar(20) NOT NULL,
-  `user_phone2` varchar(20) NOT NULL,
+  `user_studentnumber` varchar(255) default NULL,
+  `user_admissionyear` year(4) default NULL COMMENT '入学年份',
+  `user_idcardnumber` varchar(20) default NULL,
+  `user_job` varchar(255) default NULL COMMENT '可用于教师职务等',
+  `user_researchinterests` varchar(255) default NULL COMMENT '可用于研究方向、兴趣等',
+  `user_address` varchar(255) default NULL COMMENT '常住地址，当然不是寝室地址',
+  `user_dormitory` varchar(100) default NULL COMMENT '寝室地址',
+  `user_email1` varchar(255) default NULL,
+  `user_email2` varchar(255) default NULL,
+  `user_qq` varchar(50) default NULL COMMENT 'QQ',
+  `user_phone1` varchar(20) default NULL,
+  `user_phone2` varchar(20) default NULL,
   `user_token` varchar(255) NOT NULL default '',
-  `user_status` int(11) NOT NULL,
+  `user_status` int(11) default NULL,
+  `user_photo` varchar(255) default NULL,
   PRIMARY KEY  (`user_id`),
   KEY `user_gender_id` (`user_gender_id`),
   KEY `user_grade_id` (`user_grade_id`),
@@ -886,20 +870,20 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO user VALUES ('1', '1', '1', '1', '1', '1', 'axt', 'anxiaoting', '10112510218', '2011', '218', 'xxx', 'xxx', 'xxx', 'xxx', '218@ecnu.edu.cn', 'xxx', 'xxx', '18888888218', 'xxx', ' 4a79bbdb078ab6f3e317b6c93ef8ae68e4964f9d', '0');
-INSERT INTO user VALUES ('2', '1', '1', '1', '1', 'zy', 'zy', 'zhouyue', '10112510220', '2011', '220', '', '', '', '', '220@ecnu.edu.cn', '', '', '18888888220', '', '', '0');
-INSERT INTO user VALUES ('3', '1', '1', '1', '1', 'yf', 'yf', 'yufang', '10112510228', '2011', '228', '', '', '', '', '280@ecnu.edu.cn', '', '', '18888888228', '', '', '0');
-INSERT INTO user VALUES ('4', '1', '1', '1', '1', 'yhp', 'yhp', 'yuhaiping', '10112510201', '2011', '201', '', '', '', '', '201@ecnu.edu.cn', '', '', '18888888201', '', '', '0');
-INSERT INTO user VALUES ('5', '1', '1', '1', '1', 'syy', 'syy', 'songyuyi', '10112510202', '2011', '202', '', '', '', '', '202@ecnu.edu.cn', '', '', '18888888202', '', '', '0');
-INSERT INTO user VALUES ('6', '1', '1', '1', '1', 'lsy', 'lsy', 'liushiyang', '10112510203', '2011', '203', '', '', '', '', '203@ecnu.edu.cn', '', '', '18888888203', '', '', '0');
-INSERT INTO user VALUES ('7', '1', '1', '1', '1', 'df399330d331a0c6a2f8e1056a9eeb66ea904027', 'shy', 'shyfull', '10132510262', '2013', '222', '', '', '', '', '333', '', '', '444', '555', '7', '0');
-INSERT INTO user VALUES ('8', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'burgess', 'burgessfull', '10132510232', '2013', '123', '', '', '', '', '123', '', '', '123', '123', '8', '0');
-INSERT INTO user VALUES ('9', '1', '1', '1', '1', 'ljy', 'ljy', 'lijianying', '10112510204', '2011', '204', '', '', '', '', '204@ecnu.edu.cn', '', '', '18888888204', '', '', '0');
-INSERT INTO user VALUES ('10', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'ymy', 'yemengying', '10112510219', '2011', '219', '', '', '', '', '219@ecnu.edu.cn', '', '', '18888888219', 'xxx', '10', '0');
-INSERT INTO user VALUES ('11', '3', '1', '1', '1', 'teacher1', 'teacher1', 'teacher1', '', '2000', '', '教授', '', '', '', 'teacher1@ecnu.edu.cn', '', '', '', '', '', '0');
-INSERT INTO user VALUES ('12', '3', '1', '1', '1', 'teacher2', 'teacher2', 'teacher2', '', '2000', '', '副教授', '', '', '', 'teacher2@ecnu.edu.cn', '', '', '', '', '', '0');
-INSERT INTO user VALUES ('13', '3', '1', '1', '1', 'teacher3', 'teacher3', 'teacher3', '', '2000', '', '副教授', '', '', '', 'teacher3@ecnu.edu.cn', '', '', '', '', '', '0');
-INSERT INTO user VALUES ('21', '3', '1', '1', '1', 'admin1', 'admin1', 'admin1', '', '1952', '', '科创中心管理员', '', '', '', '', '', '', '', '', '', '0');
+INSERT INTO user VALUES ('1', '1', '1', '1', '1', '1', 'axt', 'anxiaoting', '10112510218', '2011', '218', 'xxx', 'xxx', 'xxx', 'xxx', '218@ecnu.edu.cn', 'xxx', 'xxx', '18888888218', 'xxx', ' 4a79bbdb078ab6f3e317b6c93ef8ae68e4964f9d', '0', null);
+INSERT INTO user VALUES ('2', '1', '1', '1', '1', 'zy', 'zy', 'zhouyue', '10112510220', '2011', '220', '', '', '', '', '220@ecnu.edu.cn', '', '', '18888888220', '', '', '0', null);
+INSERT INTO user VALUES ('3', '1', '1', '1', '1', 'yf', 'yf', 'yufang', '10112510228', '2011', '228', '', '', '', '', '280@ecnu.edu.cn', '', '', '18888888228', '', '', '0', null);
+INSERT INTO user VALUES ('4', '1', '1', '1', '1', 'yhp', 'yhp', 'yuhaiping', '10112510201', '2011', '201', '', '', '', '', '201@ecnu.edu.cn', '', '', '18888888201', '', '', '0', null);
+INSERT INTO user VALUES ('5', '1', '1', '1', '1', 'syy', 'syy', 'songyuyi', '10112510202', '2011', '202', '', '', '', '', '202@ecnu.edu.cn', '', '', '18888888202', '', '', '0', null);
+INSERT INTO user VALUES ('6', '1', '1', '1', '1', 'lsy', 'lsy', 'liushiyang', '10112510203', '2011', '203', '', '', '', '', '203@ecnu.edu.cn', '', '', '18888888203', '', '', '0', null);
+INSERT INTO user VALUES ('7', '1', '1', '1', '1', 'df399330d331a0c6a2f8e1056a9eeb66ea904027', 'shy', 'shyfull', '10132510262', '2013', '222', '', '', '', '', '333', '', '', '444', '555', '7', '0', null);
+INSERT INTO user VALUES ('8', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'burgess', 'burgessfull', '10132510232', '2013', '123', '', '', '', '', '123', '', '', '123', '123', '8', '0', null);
+INSERT INTO user VALUES ('9', '1', '1', '1', '1', 'ljy', 'ljy', 'lijianying', '10112510204', '2011', '204', '', '', '', '', '204@ecnu.edu.cn', '', '', '18888888204', '', '', '0', null);
+INSERT INTO user VALUES ('10', '1', '1', '1', '1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'ymy', 'yemengying', '10112510219', '2011', '219', '', '', '', '', '219@ecnu.edu.cn', '', '', '18888888219', 'xxx', '10', '0', null);
+INSERT INTO user VALUES ('11', '3', '1', '1', '1', 'teacher1', 'teacher1', 'teacher1', '', '2000', '', '教授', '', '', '', 'teacher1@ecnu.edu.cn', '', '', '', '', '11', '0', null);
+INSERT INTO user VALUES ('12', '3', '1', '1', '1', 'teacher2', 'teacher2', 'teacher2', '', '2000', '', '副教授', '', '', '', 'teacher2@ecnu.edu.cn', '', '', '', '', '', '0', null);
+INSERT INTO user VALUES ('13', '3', '1', '1', '1', 'teacher3', 'teacher3', 'teacher3', '', '2000', '', '副教授', '', '', '', 'teacher3@ecnu.edu.cn', '', '', '', '', '', '0', null);
+INSERT INTO user VALUES ('21', '3', '1', '1', '1', 'admin1', 'admin1', 'admin1', '', '1952', '', '科创中心管理员', '', '', '', '', '', '', '', '', '', '0', null);
 
 -- ----------------------------
 -- Table structure for `user_gender`
@@ -1007,6 +991,12 @@ DROP VIEW IF EXISTS `competition_info`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `competition_info` AS select `competition`.`id` AS `id`,`competition`.`createtime` AS `createTime`,`competition`.`content` AS `content`,`competition`.`competition_name` AS `name`,`competition`.`max_people` AS `people`,`user`.`user_name` AS `creator`,`competition`.`endTime` AS `endTime` from (`competition` join `user`) where (`competition`.`creator_id` = `user`.`user_id`);
 
 -- ----------------------------
+-- View structure for `competition_user_info`
+-- ----------------------------
+DROP VIEW IF EXISTS `competition_user_info`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `competition_user_info` AS select `competition`.`id` AS `id`,`competition_enroll`.`competition_enroll_foo_id` AS `userId`,`competition`.`competition_name` AS `competitionName` from (`competition` join `competition_enroll`) where (`competition`.`id` = `competition_enroll`.`competition_id`);
+
+-- ----------------------------
 -- View structure for `funding_info`
 -- ----------------------------
 DROP VIEW IF EXISTS `funding_info`;
@@ -1028,4 +1018,10 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- View structure for `project_user_info`
 -- ----------------------------
 DROP VIEW IF EXISTS `project_user_info`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `project_user_info` AS select `project_member`.`project_member_status` AS `memberStatus`,`user`.`user_token` AS `userToken`,`project_info`.`projectId` AS `projectId`,`project_member`.`user_id` AS `userId`,`project_info`.`categoryName` AS `categoryName`,`project_info`.`projectStatusName` AS `projectStatusName`,`project_info`.`creatorName` AS `creatorName`,`project_info`.`projectName` AS `projectName`,`project_info`.`startTime` AS `startTime`,`project_info`.`endTime` AS `endTime`,`project_info`.`categoryDescription` AS `categoryDescription`,`project_info`.`projectStatus` AS `projectStatus`,`project_info`.`people` AS `people`,`project_info`.`content` AS `content` from ((`project_info` join `project_member`) join `user`) where ((`project_info`.`projectId` = `project_member`.`project_id`) and (`project_member`.`user_id` = `user`.`user_id`));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `project_user_info` AS select `project_member`.`project_member_status` AS `memberStatus`,`user`.`user_token` AS `userToken`,`project_info`.`projectId` AS `projectId`,`project_member`.`user_id` AS `userId`,`project_info`.`categoryName` AS `categoryName`,`project_info`.`projectStatusName` AS `projectStatusName`,`project_info`.`creatorName` AS `creatorName`,`project_info`.`projectName` AS `projectName`,`project_info`.`startTime` AS `startTime`,`project_info`.`endTime` AS `endTime`,`project_info`.`categoryDescription` AS `categoryDescription`,`project_info`.`projectStatus` AS `projectStatus`,`project_info`.`people` AS `people`,`project_info`.`content` AS `content`,`project_info`.`categoryId` AS `categoryId` from ((`project_info` join `project_member`) join `user`) where ((`project_info`.`projectId` = `project_member`.`project_id`) and (`project_member`.`user_id` = `user`.`user_id`));
+
+-- ----------------------------
+-- View structure for `user_info`
+-- ----------------------------
+DROP VIEW IF EXISTS `user_info`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `user_info` AS select `user`.`user_id` AS `id`,`user`.`user_fullname` AS `name`,`user`.`user_studentnumber` AS `number`,`user`.`user_token` AS `token`,`user`.`user_photo` AS `photo`,`user_to_role`.`role_id` AS `role` from (`user` join `user_to_role`) where (`user`.`user_id` = `user_to_role`.`user_id`);
