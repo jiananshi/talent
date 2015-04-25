@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50096
 File Encoding         : 65001
 
-Date: 2015-04-25 10:27:51
+Date: 2015-04-25 15:59:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,7 @@ CREATE TABLE `comment` (
   `content` text NOT NULL,
   `create_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of comment
@@ -37,6 +37,7 @@ INSERT INTO comment VALUES ('4', '11', '8', '加我一个加我一个', '2015-04
 INSERT INTO comment VALUES ('5', '1', '1', '细化喜欢小', '2015-04-20 21:49:41');
 INSERT INTO comment VALUES ('6', '11', '10', '这么做不科学吧', '2015-04-21 21:44:45');
 INSERT INTO comment VALUES ('7', '1', '10', '很好', '2015-04-21 22:53:39');
+INSERT INTO comment VALUES ('8', '1', '1', '一般吧', '2015-04-25 15:51:18');
 
 -- ----------------------------
 -- Table structure for `competition`
@@ -870,7 +871,7 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO user VALUES ('1', '1', '1', '1', '1', '1', 'axt', 'anxiaoting', '10112510218', '2011', '218', 'xxx', 'xxx', 'xxx', 'xxx', '218@ecnu.edu.cn', 'xxx', 'xxx', '18888888218', 'xxx', ' 4a79bbdb078ab6f3e317b6c93ef8ae68e4964f9d', '0', null);
+INSERT INTO user VALUES ('1', '1', '1', '1', '1', '1', 'axt', 'anxiaoting', '10112510218', '2011', '218', 'xxx', 'xxx', 'xxx', 'xxx', '218@ecnu.edu.cn', 'xxx', 'xxx', '18888888218', 'xxx', '70f43a2ff16d1029edb5983f27a6b0a3bf317a61', '0', null);
 INSERT INTO user VALUES ('2', '1', '1', '1', '1', 'zy', 'zy', 'zhouyue', '10112510220', '2011', '220', '', '', '', '', '220@ecnu.edu.cn', '', '', '18888888220', '', '', '0', null);
 INSERT INTO user VALUES ('3', '1', '1', '1', '1', 'yf', 'yf', 'yufang', '10112510228', '2011', '228', '', '', '', '', '280@ecnu.edu.cn', '', '', '18888888228', '', '', '0', null);
 INSERT INTO user VALUES ('4', '1', '1', '1', '1', 'yhp', 'yhp', 'yuhaiping', '10112510201', '2011', '201', '', '', '', '', '201@ecnu.edu.cn', '', '', '18888888201', '', '', '0', null);
