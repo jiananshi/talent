@@ -13,19 +13,19 @@ var memberModel = require('../model/memberModel');
 
 function validToken(req, res, next){
     var db = req.db;
-    var userToken = req.query.token;
-    db.getConnection(function(err,conn){
+    var userToken = req.query.token;//获取url中的token
+    db.getConnection(function(err,conn){//获得数据库连接
         if(err){
             sendData(req,res,next,conn,err);
         }else{
-            db.query('SELECT * FROM user WHERE user_token = '+userToken+'',function(err,row){
+            db.query('SELECT * FROM user WHERE user_token = '+userToken+'',function(err,row){//验证token
                 if(err){
                     sendData(req,res,next,conn,err);
                 }else{
                     if(row.length == 0){
-                        sendData(req,res,next,conn,"请登录");
+                        sendData(req,res,next,conn,"请登录");//若无效,返回错误信息
                     }else{
-                        next();
+                        next();//若有效，则继续执行
                     }
                 }
             })
@@ -324,7 +324,16 @@ router.get('/get-project',validToken, function(req,res){
         }
     })
 })
-
+//处理时间
+function makeDate(date){
+    try{
+        var newDate = new Date();
+        newDate.setDate(date * 1000);
+        return newDate.toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    }catch(e){
+        return "0000-00-00 00:00:00";
+    }
+}
 //用户发起自创项目
 router.post('/add-item-student',function(req,res,next){
     var db = req.db;
@@ -425,7 +434,7 @@ router.post('/add-item-school',function(req,res,next){
                         conn.beginTransaction(function(err){
                             if(err){
                                 sendData(req,res,next,conn,err);
-                            }else{
+                            }else{//在project表插入项目信息
                                conn.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_start,' +
                                'project_end,project_source,project_aid,project_background,project_describe,project_innovation,' +
                                'project_plan,project_prospect,project_budget,project_resourcerequired)' +
@@ -632,3 +641,5 @@ router.post('/crowdfunding',function(req,res,next){
     })
 })
 module.exports = router;
+
+

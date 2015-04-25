@@ -22,6 +22,7 @@ var project = require('./routes/project');
 var news = require('./routes/news');
 var competition = require('./routes/competition');
 var login = require('./routes/login');
+var user = require('./routes/user');
 
 var app = express();
 
@@ -57,6 +58,7 @@ app.use('/project',project);
 app.use('/news',news);
 app.use('/competition', competition);
 app.use('/login', login);
+app.use('/user',user);
 
 
 // catch 404 and forward to error handler
