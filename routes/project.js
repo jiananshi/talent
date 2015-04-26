@@ -55,7 +55,7 @@ function getDiscuss(req,res,callback){
     var comment;
     var discuss = [];
     db.getConnection(function(err,conn){
-        db.query('SELECT * FROM comment_info WHERE project_id = '+id+' ORDER BY createTime',function(err,rows){
+        db.query('SELECT * FROM comment_info WHERE project_id = '+id+' ORDER BY createTime desc',function(err,rows){
             if(err) sendData(req,res,"",conn,err);
             else{
                 if(rows.length == 0) discuss = [];
@@ -86,7 +86,7 @@ router.get('/', function (req, res,next) {
         if (err)  sendData(req,res,next,conn,err);
         else {
             //取出所有项目简短信息
-            conn.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator, startTime,endTime FROM project_info WHERE projectStatus in (3,4,6,7,8,9) ORDER BY createTime', function (err, rows) {
+            conn.query('SELECT projectId as id,projectName as name,categoryName as category,projectStatus as status, creatorName as creator, startTime,endTime FROM project_info WHERE projectStatus in (3,4,6,7,8,9) ORDER BY startTime desc', function (err, rows) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
@@ -565,6 +565,7 @@ router.post('/change-project',validToken,function(req,res,next){
     })
 })
 
+//对项目添加评论
 router.post('/discuss',function(req,res,next){
     var token = req.query.token;//用户token
     var id = req.query.id;//项目id
