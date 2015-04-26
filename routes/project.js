@@ -255,7 +255,7 @@ router.get('/status' ,function(req,res,next){
 });
 
 //用于处理用户申请加入指定项目
-router.post('/application', function (req, res) {
+router.post('/application', function (req, res,next) {
     var db = req.db;
     var token = req.query.token;//用户token
     var id = req.query.id;//申请项目id
@@ -268,25 +268,31 @@ router.post('/application', function (req, res) {
     db.getConnection(function (err, conn) {
         if (err)  sendData(req,res,next,conn,err);
         //根据token选出userId
-        db.query('SELECT user_id FROM user WHERE user_token = ' + token + '',function(err,rows){
+        db.query('SELECT id,role FROM user_info WHERE token ="'+ token +'"',function(err,rows){
             if(err){
                 sendData(req,res,next,conn,err);
             }else{
-                userId = (rows.length == 0) ? -1 :rows[0].user_id;
+                userId = (rows.length == 0) ? -1 :rows[0].id;
                 if(userId == -1){
                     sendData(req,res,next,conn,"请登录");
                 }else {
-                    //插入记录 ，默认用户角色为1（学生），用户状态为1（审核中）
-                    db.query('INSERT INTO  project_member (project_id,user_id,project_member_role,project_member_status,project_application_reason)' +
-                    ' VALUES (' + id + ',' + userId + ', 1 , 1, " ' + applicationReason + '");', function (err, rows) {
-                        if (err) {
-                            sendData(req,res,next,conn,err);
-                        } else {
-                            data.status = (rows.affectedRows == 1)? true :false;
-                            res.send({'data' : data});
-                            conn.release();
-                        }
-                    });
+                    var role = rows[0].role;
+                    if(role == 3 || role == 7){
+                        sendData(req,res,next,conn,"不是学生,不能报名");
+                    }else {
+                        //插入记录 ，默认用户角色为1（学生），用户状态为1（审核中）
+                        db.query('INSERT INTO  project_member (project_id,user_id,project_member_role,project_member_status,project_application_reason)' +
+                        ' VALUES (' + id + ',' + userId + ', 0 , 1, "' + applicationReason + '");', function (err, rows) {
+                            if (err) {
+                                sendData(req, res, next, conn, err);
+                            } else {
+                                data.status = (rows.affectedRows == 1) ? true : false;
+                                data.message = (rows.affectedRows == 1) ? "报名成功" : "报名失败";
+                                res.send({'data': data});
+                                conn.release();
+                            }
+                        });
+                    }
                 }
             }
         })
