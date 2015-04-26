@@ -234,7 +234,7 @@ router.get('/status' ,function(req,res,next){
        if(err){
            sendData(req,res,next,conn,err);
        }else {
-           db.query('select * from user WHERE user_token = ' + userToken + '', function (err, row) {
+           db.query('select * from user WHERE user_token ="' + userToken + '"', function (err, row) {
                if(err){
                    sendData(req,res,next,conn,err);
                }else {
@@ -242,13 +242,29 @@ router.get('/status' ,function(req,res,next){
                        sendData(req,res,next,conn,"请登录");
                    } else {
                        var userId = row[0].user_id;
-                       db.query('select project_member_status as status from project_member where user_id = ' + userId + ' and project_id = ' + projectId + ' ', function (err, row) {
-                           result.status = (row.length == 0) ? 0 : row[0].status;
-                           res.send(result);
+                       //判断项目是否为自创项目,只有自创项目才有状态
+                       db.query('SELECT categoryId from project_info WHERE projectId = '+projectId+'',function(err,row){
+                           if(err) sendData(req,res,next,conn,err);
+                           else{
+                               if(row.length == 0){
+                                   sendData(req,res,next,conn,"该项目不存在");
+                               }else{
+                                   if(row[0].categoryId == 4){
+                                       db.query('select project_member_status as status from project_member where user_id = ' + userId + ' and project_id = ' + projectId + ' ', function (err, row) {
+                                           result.status = (row.length == 0) ? 0 : row[0].status;
+                                           conn.release();
+                                           res.send(result);
+                                       })
+                                   }else{
+                                       sendData(req,res,next,conn,"只有自创项目才有报名状态");
+                                   }
+                               }
+                           }
+
                        })
+
                    }
                }
-               conn.release();
            })
        }
     })
