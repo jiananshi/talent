@@ -26,8 +26,8 @@ router.get('/detail', function (req, res) {
                 }else{
                     rows.forEach(function(row){
                         competition = new competitionModel(row.id, row.name, row.creator, row.content, common.makeDate(row.createTime) ,common.makeDate(row.endTime), row.people);
-                        result.push(competition);
-                    })
+                        result = competition;
+                    });
                     res.send(result);
                 }
             })
