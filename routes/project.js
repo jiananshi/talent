@@ -448,77 +448,86 @@ router.post('/add-item-school',function(req,res,next){
                     console.log(teacher);
                     //根据老师名字获得老师id
                     conn.query('SELECT user_id FROM user WHERE user_fullname ="'+teacher+'"',function(err,rows){
-                        var teacherId = rows[0].user_id;
-                        console.log(teacherId);
-                        //利用事务对project表和project_member表进行插入
-                        conn.beginTransaction(function(err){
-                            if(err){
-                                sendData(req,res,next,conn,err);
-                            }else{//在project表插入项目信息
-                               conn.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_start,' +
-                               'project_end,project_source,project_aid,project_background,project_describe,project_innovation,' +
-                               'project_plan,project_prospect,project_budget,project_resourcerequired)' +
-                               'VALUES ('+category+',0,'+userId+',"'+name+'","'+startTime+'","'+endTime+'",1,"'+aid+'",' +
-                                   '"'+background+'","'+describe+'","'+innovation+'","'+plan+'","'+prospect+'","'+budget+'","'+resourcerequired+'")',function(err,rows){
-                                       if(err){
-                                           conn.rollback(function() {
-                                               sendData(req,res,next,conn,err);
-                                           });
-                                       }
-                                       var insertId = rows.insertId;
-                                       console.log(insertId);
-                                       //在member表中插入项目和指导老师的对应关系
-                                       conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task) ' +
-                                       'VALUES ('+insertId+','+teacherId+',2,"指导老师")',function(err,rows){
-                                           if(err){
-                                               conn.rollback(function() {
-                                                   sendData(req,res,next,conn,err);
-                                               });
-                                           }
-                                           //插入队长
-                                           console.log(insertId);
-                                           conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task) ' +
-                                           'VALUES ('+insertId+','+mainMember.id+',1,"队长")',function(err,rows){
-                                               if(err){
-                                                   conn.rollback(function() {
-                                                       sendData(req,res,next,conn,err);
-                                                   });
-                                               }
-                                               console.log(rows.insertId);
-                                               for(var i in member){
-                                                   var memberId = member[i].id;
-                                                   console.log(memberId);
-                                                   conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task)' +
-                                                   'VALUES ('+insertId+','+memberId+',3,"队员")',function(err,rows){
-                                                       if(err){
-                                                           conn.rollback(function() {
-                                                               sendData(req,res,next,conn,err);
-                                                           });
-                                                       }
-                                                       if(i == member.length-1){
-                                                           conn.commit(function(err) {
-                                                               if (err) {
-                                                                   conn.rollback(function() {
-                                                                       sendData(req,res,next,conn,err);
-                                                                   });
-                                                               }
-                                                               console.log('success!');
-                                                               var data = {
-                                                                   status:true,
-                                                                   message : "申报成功"
-                                                               }
-                                                               res.send({"data":data});
-                                                           });
-                                                       }
-                                                   })
-                                               }
-                                           })
+                        if(err){
+                            sendData(req, res, next, conn, err);
+                        }else{
+                            if(rows.length == 0){
+                                sendData(req,res,next,conn,"该老师不存在");
+                            }else{
+                                //利用事务对project表和project_member表进行插入
+                                conn.beginTransaction(function(err){
+                                    if(err){
+                                        sendData(req,res,next,conn,err);
+                                    }else{
+                                        var teacherId = rows[0].user_id;
+                                        console.log(teacherId);
+                                    //在project表插入项目信息
+                                        conn.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_start,' +
+                                            'project_end,project_source,project_aid,project_background,project_describe,project_innovation,' +
+                                            'project_plan,project_prospect,project_budget,project_resourcerequired)' +
+                                            'VALUES ('+category+',1,'+userId+',"'+name+'","'+startTime+'","'+endTime+'",1,"'+aid+'",' +
+                                            '"'+background+'","'+describe+'","'+innovation+'","'+plan+'","'+prospect+'","'+budget+'","'+resourcerequired+'")',function(err,rows){
+                                                if(err){
+                                                    conn.rollback(function() {
+                                                        sendData(req,res,next,conn,err);
+                                                    });
+                                                }
+                                                var insertId = rows.insertId;
+                                                console.log(insertId);
+                                                //在member表中插入项目和指导老师的对应关系
+                                                conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task) ' +
+                                                'VALUES ('+insertId+','+teacherId+',2,"指导老师")',function(err,rows){
+                                                    if(err){
+                                                        conn.rollback(function() {
+                                                            sendData(req,res,next,conn,err);
+                                                        });
+                                                    }
+                                                    //插入队长
+                                                    console.log(insertId);
+                                                    conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task) ' +
+                                                    'VALUES ('+insertId+','+mainMember.id+',1,"队长")',function(err,rows){
+                                                        if(err){
+                                                            conn.rollback(function() {
+                                                                sendData(req,res,next,conn,err);
+                                                            });
+                                                        }
+                                                        console.log(rows.insertId);
+                                                        for(var i in member){
+                                                            var memberId = member[i].id;
+                                                            console.log(memberId);
+                                                            conn.query('INSERT INTO project_member (project_id,user_id,project_member_role,project_member_task)' +
+                                                            'VALUES ('+insertId+','+memberId+',3,"队员")',function(err,rows){
+                                                                if(err){
+                                                                    conn.rollback(function() {
+                                                                        sendData(req,res,next,conn,err);
+                                                                    });
+                                                                }
+                                                                if(i == member.length-1){
+                                                                    conn.commit(function(err) {
+                                                                        if (err) {
+                                                                            conn.rollback(function() {
+                                                                                sendData(req,res,next,conn,err);
+                                                                            });
+                                                                        }
+                                                                        console.log('success!');
+                                                                        var data = {
+                                                                            status:true,
+                                                                            message : "申报成功"
+                                                                        }
+                                                                        res.send({"data":data});
+                                                                    });
+                                                                }
+                                                            })
+                                                        }
+                                                    })
 
-                                       })
-                                   }
-                                )
+                                                })
+                                            }
+                                        )
+                                    }
+                                })
                             }
-                        })
+                        }
                     })
                 }
             }
