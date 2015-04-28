@@ -29,6 +29,7 @@ exports.objClone = function cloneObject(src) {
 
 exports.makeDate = function makeDate(date) {
     try {
+        console.log(date);
         var newDate = new Date(date);
         //在小于10的月份前补0
         var month = eval(newDate.getMonth() + 1) < 10 ? '0'+eval(newDate.getMonth() + 1) : eval(newDate.getMonth() + 1);
@@ -45,7 +46,7 @@ exports.makeDate = function makeDate(date) {
     }catch(e){
         var stringDate = "0000-00-00 00:00:00";
     }finally{
-        return stringDate;
+        return date;
     }
 
 };

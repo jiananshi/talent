@@ -355,7 +355,9 @@ function makeDate(date){
 //用户发起自创项目
 router.post('/add-item-student',function(req,res,next){
     var db = req.db;
-    var project = new projectModel(0,req.query.name,req.query.category,0,req.query.people,req.query.discribe,0);
+    var project = new projectModel(0,req.query.name,req.query.category,0,req.query.people,req.query.discribe,7);
+    var funding = req.query.funding;
+    var planMoney = (funding == 1 ) ? req.query.planMoney : 0;
     var startTimeStamp = req.query.startTime;
     var endTimeStamp = req.query.endTime;
     var newDate = new Date();
@@ -381,9 +383,9 @@ router.post('/add-item-student',function(req,res,next){
                     var userId = rows[0].user_id;
                     project.setCreator(userId);
                     console.log(project.getPeople());
-                    db.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_describe,project_signup_max,project_start,project_end) ' +
+                    db.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_describe,project_signup_max,project_start,project_end,project_funding,project_funding_planmoney) ' +
                     ' VALUES (4,'+project.getProjectStatus()+','+project.getCreator()+',"'+project.getName()+'",' +
-                    '"'+project.getContent()+'",'+project.getPeople()+',"'+startTime+'","'+endTime+'")',function(err , row){
+                    '"'+project.getContent()+'",'+project.getPeople()+',"'+startTime+'","'+endTime+'",'+funding+','+planMoney+')',function(err , row){
                         if(err){
                             sendData(req,res,next,conn,err);
                         }else{
