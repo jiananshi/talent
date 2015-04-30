@@ -85,28 +85,46 @@ router.post('/application', function (req, res) {
         db.query('SELECT user_id from user where user_token = "'+token+'"',function(err,row){
             if(err){
                 data.message = err;
+                conn.release();
                 res.send({'data' : data});
             }else{
                 //根据token查不到userId说明 token已过期 需重新登录
                 var userId = (row.length == 0) ? 0 : row[0].user_id;
                 if(userId == 0){
                     data.message = "重新登录";
+                    conn.release();
                     res.send({'data' : data});
                 }else{
-                    db.query('INSERT INTO competition_enroll (competition_id, competition_enroll_foo_id) VALUES ('+id+','+userId+')',function(err,row){
+                    db.query('SELECT * FROM competition_enroll WHERE competition_id = '+id+' and competition_enroll_foo_id='+userId+'',function(err,rows){
                         if(err){
                             data.message = err;
-                            res.send({'data' : data});
+                            conn.release();
+                            res.send({'data':data});
                         }else{
-                            //影响行数为1 说明报名成功
-                            data.message = (row.affectedRows == 1) ? "报名成功" : "报名失败";
-                            data.status = (row.affectedRows == 1) ? true: false;
-                            res.send({'data' : data});
+                            if(rows.length !== 0){
+                                data.message = "您已经报名";
+                                conn.release();
+                                res.send({'data':data});
+                            }else{
+                                db.query('INSERT INTO competition_enroll (competition_id, competition_enroll_foo_id) VALUES ('+id+','+userId+')',function(err,row){
+                                    if(err){
+                                        data.message = err;
+                                        conn.release();
+                                        res.send({'data' : data});
+                                    }else{
+                                        //影响行数为1 说明报名成功
+                                        data.message = (row.affectedRows == 1) ? "报名成功" : "报名失败";
+                                        data.status = (row.affectedRows == 1) ? true: false;
+                                        conn.release();
+                                        res.send({'data' : data});
+                                    }
+                                } )
+                            }
                         }
-                    } )
+                    })
                 }
             }
-            conn.release();
+
         })
     })
 
