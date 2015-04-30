@@ -359,9 +359,9 @@ router.post('/add-item-student',function(req,res,next){
     var startTimeStamp = req.query.startTime;
     var endTimeStamp = req.query.endTime;
     var newDate = new Date();
-    newDate.setTime(startTimeStamp * 1000);
+    newDate.setTime(startTimeStamp);
     var startTime = newDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    newDate.setTime(endTimeStamp * 1000);
+    newDate.setTime(endTimeStamp);
     var endTime = newDate.toISOString().replace(/T/, ' ').replace(/\..+/, '');
     var userToken = req.query.token;
     var data = {
@@ -389,7 +389,7 @@ router.post('/add-item-student',function(req,res,next){
                         }else{
                             data.message = (row.affectedRows == 1 )? "插入成功" : "插入失败";
                             data.status = (row.affectedRows == 1) ? true : false;
-                            res.send(data);//若有错误返回false
+                            res.send({data : data});//若有错误返回false
                             conn.release();
                         }
                     })
