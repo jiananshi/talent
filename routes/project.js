@@ -77,16 +77,6 @@ router.get('/', function (req, res, next) {
         message: ""
     };
 
-    co(function *() {
-        // resolve multiple promises in parallel
-        var a = Promise.resolve(1);
-        var b = Promise.resolve(2);
-        var c = Promise.resolve(3);
-        var res = yield [a, b, c];
-        console.log(res);
-        // => [1, 2, 3]
-    })
-
     db.getConnection(function (err, conn) {
         if (err)  sendData(req, res, next, conn, err);
         else {
@@ -563,7 +553,7 @@ router.get('/category', function (req, res) {
         if (err) {
             sendData(req, res, next, conn, err);
         } else {
-            db.query('SELECT project_category_id as id,project_category_name as name FROM project_category', function (err, row) {
+            conn.query('SELECT project_category_id as id,project_category_name as name FROM project_category', function (err, row) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
