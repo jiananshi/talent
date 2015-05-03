@@ -6,7 +6,7 @@ router.get('/', function (req, res) {
   var send;
   db.getConnection(function (err, conn) {
     if (err) console.log("POOL ==> " + err);
-    db.query('SELECT id,name FROM test',function(err,rows){
+    conn.query('SELECT id,name FROM test',function(err,rows){
       if(err){
         console.log(err);
       }else{
@@ -26,7 +26,7 @@ router.post('/', function (req, res) {
   var name = req.query.name;
     db.getConnection(function (err, conn) {
     if (err) console.log("POOL ==> " + err);
-    db.query('INSERT INTO test (name) VALUES (' + name + ');',function(err,data){
+    conn.query('INSERT INTO test (name) VALUES (' + name + ');',function(err,data){
       if(err){
         console.log(err);
         res.send(err);

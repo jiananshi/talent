@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
             data.message = err;
             res.send({'data' : data});
         }
-        db.query("SELECT news_id as id, news_title as name,news_show_picture as imgUrl,news_content as content,news_createtime as time,news_readtimes as readTimes " +
+        conn.query("SELECT news_id as id, news_title as name,news_show_picture as imgUrl,news_content as content,news_createtime as time,news_readtimes as readTimes " +
         "From news WHERE news_status = 0", function(err,rows){
             if(err){
                 console.log(err);
@@ -30,7 +30,7 @@ router.get('/', function (req, res) {
                     var news = newsModel(rows[i].id, rows[i].name,1,rows[i].imgUrl,rows[i].content.substr(0,40),common.makeDate(rows[i].time),rows[i].readTimes);
                     result.push(news);
                 }
-                db.query('SELECT notice_id as id,notice_title as name,notice_content as content,notice_createtime as time FROM notice WHERE notice_status = 0 ',function(err,rows){
+                conn.query('SELECT notice_id as id,notice_title as name,notice_content as content,notice_createtime as time FROM notice WHERE notice_status = 0 ',function(err,rows){
                     if(err){
                         console.log(err);
                         data.message = err;
@@ -67,7 +67,7 @@ router.get('/detail', function (req, res) {
             conn.release();
         }else{
             if(category == 1 ){
-                db.query('SELECT news_id as id, news_title as name,news_show_picture as imgUrl,news_content as content,news_createtime as time,news_readtimes as readTimes ' +
+                conn.query('SELECT news_id as id, news_title as name,news_show_picture as imgUrl,news_content as content,news_createtime as time,news_readtimes as readTimes ' +
                 ' From news WHERE news_id = '+id+' ORDER BY time ', function(err,rows){
                     if(err){
                         console.log(err);
@@ -81,7 +81,7 @@ router.get('/detail', function (req, res) {
                     }
             })
          }else{
-                db.query('SELECT notice_id as id,notice_title as name,notice_content as content,notice_createtime as time FROM notice WHERE notice_id = '+id+' ORDER BY time desc', function(err,rows){
+                conn.query('SELECT notice_id as id,notice_title as name,notice_content as content,notice_createtime as time FROM notice WHERE notice_id = '+id+' ORDER BY time desc', function(err,rows){
                     if(err){
                         console.log(err);
                         data.message = err;
@@ -110,7 +110,7 @@ router.post('/read',function(req,res){
             data.message = err;
             res.send({"data" : data});
         }else{
-            db.query('UPDATE news set news_readtimes = news_readtimes+1 WHERE news_id = '+id+' ',function(err,row){
+            conn.query('UPDATE news set news_readtimes = news_readtimes+1 WHERE news_id = '+id+' ',function(err,row){
                 if(err){
                     data.message = err;
                     conn.release();

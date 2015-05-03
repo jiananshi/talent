@@ -19,7 +19,7 @@ function validToken(req, res, next) {
         if (err) {
             sendData(req, res, next, conn, err);
         } else {
-            db.query('SELECT * FROM user WHERE user_token = ' + userToken + '', function (err, row) {//验证token
+            conn.query('SELECT * FROM user WHERE user_token = ' + userToken + '', function (err, row) {//验证token
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
@@ -49,7 +49,7 @@ function getDiscuss(req, res, callback) {
     var comment;
     var discuss = [];
     db.getConnection(function (err, conn) {
-        db.query('SELECT * FROM comment_info WHERE project_id = ' + id + ' ORDER BY createTime desc', function (err, rows) {
+        conn.query('SELECT * FROM comment_info WHERE project_id = ' + id + ' ORDER BY createTime desc', function (err, rows) {
             if (err) sendData(req, res, "", conn, err);
             else {
                 if (rows.length == 0) discuss = [];
@@ -142,7 +142,7 @@ router.get('/detail', function (req, res, next) {
                                         if (free.funding == 1) {//1说明是众筹项目
                                             allCrowfunding.planMoney = free.planmoney;
                                             //根据id获取众筹信息
-                                            db.query('SELECT userId,userName,content,money FROM funding_info WHERE projectId = ' + id + '', function (err, rows) {
+                                            conn.query('SELECT userId,userName,content,money FROM funding_info WHERE projectId = ' + id + '', function (err, rows) {
                                                 if (err) sendData(req, res, next, conn, err);
                                                 else {
                                                     for (var i in rows) {
@@ -151,7 +151,7 @@ router.get('/detail', function (req, res, next) {
 
                                                     }
                                                     allCrowfunding.crowfunding = allFunding;
-                                                    db.query('select count(DISTINCT userId) as people, (case when sum(money) is null then 0 else sum(money) end) as realmoney from funding_info where projectId = ' + id + '', function (err, row) {
+                                                    conn.query('select count(DISTINCT userId) as people, (case when sum(money) is null then 0 else sum(money) end) as realmoney from funding_info where projectId = ' + id + '', function (err, row) {
                                                         if (err) sendData(req, res, next, conn, err);
                                                         else {
                                                             allCrowfunding.people = row[0].people;
@@ -172,7 +172,7 @@ router.get('/detail', function (req, res, next) {
                                 }
                             })
                         } else {//说明是正式项目
-                            db.query('SELECT projectName,categoryName,creatorName,content,people,startTime,endTime,source,aid,background,innovation,plan,prospect' +
+                            conn.query('SELECT projectName,categoryName,creatorName,content,people,startTime,endTime,source,aid,background,innovation,plan,prospect' +
                             ' budget,resourcerequired ,projectStatus FROM project_info WHERE projectId = ' + id + '', function (err, row) {
                                 if (err) sendData(req, res, next, conn, err);
                                 else {
@@ -182,7 +182,7 @@ router.get('/detail', function (req, res, next) {
                                         officialProject = new officialProjectModel(id, o.projectName, o.categoryName, 2, o.creatorName, o.content, o.people, common.makeDate(o.startTime), common.makeDate(o.endTime), [], o.source, o.aid, o.background, o.innovation, o.plan, o.prospect, o.budget, o.resourcerequired, [], "", {}, o.projectStatus);
                                         getDiscuss(req, res, function (discuss) {
                                             officialProject.setDiscuss(discuss);
-                                            db.query('SELECT * from member_info WHERE projectId = ' + id + '', function (err, rows) {
+                                            conn.query('SELECT * from member_info WHERE projectId = ' + id + '', function (err, rows) {
                                                 if (err) sendData(req, res, next, conn, err);
                                                 else {
                                                     for (var i in rows) {
@@ -229,7 +229,7 @@ router.get('/status', function (req, res, next) {
         if (err) {
             sendData(req, res, next, conn, err);
         } else {
-            db.query('select * from user WHERE user_token ="' + userToken + '"', function (err, row) {
+            conn.query('select * from user WHERE user_token ="' + userToken + '"', function (err, row) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
@@ -238,14 +238,14 @@ router.get('/status', function (req, res, next) {
                     } else {
                         var userId = row[0].user_id;
                         //判断项目是否为自创项目,只有自创项目才有状态
-                        db.query('SELECT categoryId from project_info WHERE projectId = ' + projectId + '', function (err, row) {
+                        conn.query('SELECT categoryId from project_info WHERE projectId = ' + projectId + '', function (err, row) {
                             if (err) sendData(req, res, next, conn, err);
                             else {
                                 if (row.length == 0) {
                                     sendData(req, res, next, conn, "该项目不存在");
                                 } else {
                                     if (row[0].categoryId == 4) {
-                                        db.query('select project_member_status as status from project_member where user_id = ' + userId + ' and project_id = ' + projectId + ' ', function (err, row) {
+                                        conn.query('select project_member_status as status from project_member where user_id = ' + userId + ' and project_id = ' + projectId + ' ', function (err, row) {
                                             result.status = (row.length == 0) ? 0 : row[0].status;
                                             conn.release();
                                             res.send(result);
@@ -279,7 +279,7 @@ router.post('/application', function (req, res, next) {
     db.getConnection(function (err, conn) {
         if (err)  sendData(req, res, next, conn, err);
         //根据token选出userId
-        db.query('SELECT id,role FROM user_info WHERE token ="' + token + '"', function (err, rows) {
+        conn.query('SELECT id,role FROM user_info WHERE token ="' + token + '"', function (err, rows) {
             if (err) {
                 sendData(req, res, next, conn, err);
             } else {
@@ -292,7 +292,7 @@ router.post('/application', function (req, res, next) {
                         sendData(req, res, next, conn, "不是学生,不能报名");
                     } else {
                         //插入记录 ，默认用户角色为1（学生），用户状态为1（审核中）
-                        db.query('INSERT INTO  project_member (project_id,user_id,project_member_role,project_member_status,project_application_reason)' +
+                        conn.query('INSERT INTO  project_member (project_id,user_id,project_member_role,project_member_status,project_application_reason)' +
                         ' VALUES (' + id + ',' + userId + ', 0 , 1, "' + applicationReason + '");', function (err, rows) {
                             if (err) {
                                 sendData(req, res, next, conn, err);
@@ -323,7 +323,7 @@ router.get('/get-project', validToken, function (req, res) {
     db.getConnection(function (err, conn) {
         if (err) sendData(req, res, next, conn, err);
         else {
-            db.query('SELECT projectId,projectName,categoryName,creatorName,people,content,projectStatus,memberStatus ' +
+            conn.query('SELECT projectId,projectName,categoryName,creatorName,people,content,projectStatus,memberStatus ' +
             'FROM project_user_info WHERE  projectId = ' + id + '', function (err, rows) {
                 if (err) {
                     sendData(req, res, next, conn, err);
@@ -368,7 +368,7 @@ router.post('/add-item-student', function (req, res, next) {
     db.getConnection(function (err, conn) {
         if (err) sendData(req, res, next, conn, err);
         //根据token选出userId
-        db.query('SELECT user_id FROM user WHERE user_token ="' + userToken + '"', function (err, rows) {
+        conn.query('SELECT user_id FROM user WHERE user_token ="' + userToken + '"', function (err, rows) {
             if (err) {
                 sendData(req, res, next, conn, err);
             } else {
@@ -378,7 +378,7 @@ router.post('/add-item-student', function (req, res, next) {
                     var userId = rows[0].user_id;
                     project.setCreator(userId);
                     console.log(project.getPeople());
-                    db.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_describe,project_signup_max,project_start,project_end,project_funding,project_funding_planmoney) ' +
+                    conn.query('INSERT INTO project (project_category_id,project_status,project_creator_id,project_name,project_describe,project_signup_max,project_start,project_end,project_funding,project_funding_planmoney) ' +
                     ' VALUES (4,' + project.getProjectStatus() + ',' + project.getCreator() + ',"' + project.getName() + '",' +
                     '"' + project.getContent() + '",' + project.getPeople() + ',"' + startTime + '","' + endTime + '",' + funding + ',' + planMoney + ')', function (err, row) {
                         if (err) {
@@ -584,7 +584,7 @@ router.post('/change-project', validToken, function (req, res, next) {
         if (err) {
             sendData(req, res, next, conn, err);
         } else {
-            db.query('UPDATE project SET project_status = ' + projectStatus + ' WHERE project_id = ' + id + '', function (err, row) {
+            conn.query('UPDATE project SET project_status = ' + projectStatus + ' WHERE project_id = ' + id + '', function (err, row) {
                 if (err) {
                     sendData(req, res, next, conn, err);
                 } else {
@@ -607,14 +607,14 @@ router.post('/discuss', function (req, res, next) {
     db.getConnection(function (err, conn) {
         if (err) sendData(req, res, next, conn, err);
         else {
-            db.query('SELECT user_id from user where user_token = "' + token + '"', function (err, row) {
+            conn.query('SELECT user_id from user where user_token = "' + token + '"', function (err, row) {
                 if (err) sendData(req, res, next, conn, err);
                 else {
                     if (row.length == 0) {
                         sendData(req, res, next, conn, "请重新登陆");
                     } else {
                         var userId = row[0].user_id;
-                        db.query('INSERT INTO comment (project_id,user_id,content) VALUES (' + id + ',' + userId + ',"' + content + '")', function (err, row) {
+                        conn.query('INSERT INTO comment (project_id,user_id,content) VALUES (' + id + ',' + userId + ',"' + content + '")', function (err, row) {
                             if (err) sendData(req, res, next, conn, err);
                             else {
                                 if (row.affectedRows == 0) {
@@ -646,7 +646,7 @@ router.post('/crowdfunding', function (req, res, next) {
     db.getConnection(function (err, conn) {
         if (err) sendData(req, res, next, conn, err);
         else {
-            db.query('SELECT user_id from user where user_token = "' + token + '"', function (err, row) {
+            conn.query('SELECT user_id from user where user_token = "' + token + '"', function (err, row) {
                 if (err) sendData(req, res, next, conn, err);
                 else {
                     if (row.length == 0) {
@@ -654,7 +654,7 @@ router.post('/crowdfunding', function (req, res, next) {
                     } else {
                         var userId = row[0].user_id;
                         console.log(userId);
-                        db.query('INSERT INTO funding (project_id,user_id,content,money) VALUES (' + id + ',' + userId + ',"' + content + '",' + money + ')', function (err, row) {
+                        conn.query('INSERT INTO funding (project_id,user_id,content,money) VALUES (' + id + ',' + userId + ',"' + content + '",' + money + ')', function (err, row) {
                             if (err) sendData(req, res, next, conn, err);
                             else {
                                 console.log(userId);

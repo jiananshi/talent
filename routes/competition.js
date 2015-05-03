@@ -19,7 +19,7 @@ router.get('/detail', function (req, res) {
             data.message = err;
             res.send({'data': data});
         }else{
-            db.query('select id, name, createTime, endTime, people , content, creator from competition_info where id = '+id+' ',function(err,rows){
+            conn.query('select id, name, createTime, endTime, people , content, creator from competition_info where id = '+id+' ',function(err,rows){
                 if(err){
                     data.message = err;
                     res.send({'data' : data});
@@ -51,7 +51,7 @@ router.get('/',function(req,res){
             data.message = err;
             res.send({'data': data});
         }else{
-            db.query('select id, name,endTime,creator from competition_info ',function(err,rows){
+            conn.query('select id, name,endTime,creator from competition_info ',function(err,rows){
                 if(err){
                     data.message = err;
                     res.send({'data' : data});
@@ -82,7 +82,7 @@ router.post('/application', function (req, res) {
     db.getConnection(function(err , conn){
         if(err) res.send({'data' : data});
         //根据token取得userId
-        db.query('SELECT user_id from user where user_token = "'+token+'"',function(err,row){
+        conn.query('SELECT user_id from user where user_token = "'+token+'"',function(err,row){
             if(err){
                 data.message = err;
                 conn.release();
@@ -95,7 +95,7 @@ router.post('/application', function (req, res) {
                     conn.release();
                     res.send({'data' : data});
                 }else{
-                    db.query('SELECT * FROM competition_enroll WHERE competition_id = '+id+' and competition_enroll_foo_id='+userId+'',function(err,rows){
+                    conn.query('SELECT * FROM competition_enroll WHERE competition_id = '+id+' and competition_enroll_foo_id='+userId+'',function(err,rows){
                         if(err){
                             data.message = err;
                             conn.release();
@@ -106,7 +106,7 @@ router.post('/application', function (req, res) {
                                 conn.release();
                                 res.send({'data':data});
                             }else{
-                                db.query('INSERT INTO competition_enroll (competition_id, competition_enroll_foo_id) VALUES ('+id+','+userId+')',function(err,row){
+                                conn.query('INSERT INTO competition_enroll (competition_id, competition_enroll_foo_id) VALUES ('+id+','+userId+')',function(err,row){
                                     if(err){
                                         data.message = err;
                                         conn.release();
@@ -145,7 +145,7 @@ router.get('/get-competition',function(req,res){
             data.message = err;
             res.send(data);
         }else{
-            db.query('SELECT * FROM user WHERE user_token = '+token+'',function(err,row){
+            conn.query('SELECT * FROM user WHERE user_token = '+token+'',function(err,row){
                 if(err){
                     data.message = err;
                     res.send({'data':data});
@@ -156,7 +156,7 @@ router.get('/get-competition',function(req,res){
                         res.send({'data': data});
                         conn.release();
                     } else {
-                        db.query('select id, name, createTime, endTime, people , content, creator from competition_info where id = '+id+' ', function (err, row) {
+                        conn.query('select id, name, createTime, endTime, people , content, creator from competition_info where id = '+id+' ', function (err, row) {
                             if (err) {
                                 data.message = err;
                                 res.send({'data': data});
