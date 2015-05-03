@@ -24,11 +24,12 @@ router.post('/', function (req, res) {
   var db = req.db;
   var send;
   var name = req.query.name;
-  db.getConnection(function (err, conn) {
+    db.getConnection(function (err, conn) {
     if (err) console.log("POOL ==> " + err);
     db.query('INSERT INTO test (name) VALUES (' + name + ');',function(err,data){
       if(err){
         console.log(err);
+        res.send(err);
       }else{
         console.log(data);
         send = data;

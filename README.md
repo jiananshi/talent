@@ -3,11 +3,15 @@ talent App
 app
 =======
 
-整体架构和[node-serve](https://github.com/ggice/node-server)相同，不同的是将数据库由mongodb更换成了mysql。
+引入了处理JS异步回调的插件co，所以需要做些额外的动作来支持它。
 
-1.踢出了mongodb相关的依赖
+1.要求node.js 版本必须0.11以上，并且在运行是添加--harmony参数启用新的ES6特性，
 
-2.引入mysql依赖 [node-mysql](https://www.npmjs.com/package/mysql)
-有关node.js 使用mysql的一篇技术[文章](http://blog.fens.me/nodejs-mysql-intro/) 
+    如：supervisor --harmony ./bin/www
 
-3.具体实现参考test.js中的示例代码,mysql配置文件在app.js中，示例代码的sql文件在data目录中。
+2.webstorm 要求
+
+进入配置项：Preferences -> Languages & Frameworks -> JavaScript, 选择 ECMAScript 6 作为 JavaScript version.
+
+
+enjoy!!!
