@@ -6,6 +6,7 @@ var router = express.Router();
 var common = require('../model/common');
 
 router.get('/',function(req,res) {
+    console.log("init");
     var db = req.db;
     var data = {
         data: {
@@ -24,8 +25,8 @@ router.get('/',function(req,res) {
             data.data.message = err;
             res.send(data);
         }else{
-            db.query('UPDATE user set user_token ="'+ token +'" where user_name = "'+ name+'" and user_password ="'+ password+'" ',function(err,row){
-                    if(err){
+            conn.query('UPDATE user set user_token ="'+ token +'" where user_name = "'+ name+'" and user_password ="'+ password+'" ',function(err,row){
+                if(err){
                         data.data.message = err;
                         response.send(data);
                     }else{
