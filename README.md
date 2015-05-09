@@ -13,5 +13,20 @@ app
 
 进入配置项：Preferences -> Languages & Frameworks -> JavaScript, 选择 ECMAScript 6 作为 JavaScript version.
 
+为了方便开发和不是，引入配置文件config.js
+
+1.第一次运行程序需要在根目录创建一个 config.js
+
+写入要连接数据库的信息内容如下：
+
+    exports.sql = {
+        host: 'localhost',
+        user: 'root',
+        password: '12345',
+        database: 'talent',
+        port: 3306
+    };
+    
+注：config.js 已经加入gitignore 所以不会上传，每个人开发也不会相互影响。
 
 enjoy!!!

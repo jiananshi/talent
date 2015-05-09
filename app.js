@@ -4,17 +4,19 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var thunkify = require('thunkify');
-
+var config = require('./config');
+console.log(config);
+var sql = config.sql;
 
 //connect mysql, change  the information to yourself.
 var mysql = require('mysql');
 //create connection pool
 var connection = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '12345',
-    database: 'talent',
-    port: 3306,
+    host: sql.host,
+    user: sql.user,
+    password: sql.password,
+    database: sql.database,
+    port: sql.port,
     connectionLimit: 1000
 });
 //thunk to support es6 generator-based such as co
