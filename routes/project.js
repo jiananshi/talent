@@ -525,7 +525,7 @@ router.post('/add-item-school', function (req, res, next) {
             //(1：学生申请加入项目，项目负责人得到消息 1.1：学生得到是否同意加入项目的消息 2：学生申请加入竞赛，竞赛负责人得到消息 2.1：学生得到是否允许加入竞赛的消息 3：学生申请学校项目，基地老师、管理员收到消息 3.1：学生得到管理员、基地老师回复的消息)
             "content": mainMember.name + '申请创建[' + name +']的项目。',
             "push": 2, //(1: 已经推送 2:未推送)
-            "check": 2, //(1: 已经查看 2:未查看),
+            "isCheck": 2, //(1: 已经查看 2:未查看),
             "createTime": (new Date()).toLocaleString(),
             "project_id" : insertPoject[0].insertId, //消息相关项目的ID,
             "project_status" : 1 //目前项目状态

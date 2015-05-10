@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.20)
 # Database: talent
-# Generation Time: 2015-05-10 11:30:38 +0000
+# Generation Time: 2015-05-10 14:57:51 +0000
 # ************************************************************
 
 
@@ -579,19 +579,19 @@ CREATE TABLE `mobile_message` (
   `content` varchar(255) NOT NULL,
   `status` int(11) NOT NULL,
   `category` int(11) NOT NULL,
-  `push` int(11) DEFAULT NULL,
-  `check` int(11) DEFAULT NULL,
-  `project_id` int(11) DEFAULT NULL,
-  `project_status` int(11) DEFAULT NULL,
+  `isPush` int(11) NOT NULL,
+  `isCheck` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `project_status` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 LOCK TABLES `mobile_message` WRITE;
 /*!40000 ALTER TABLE `mobile_message` DISABLE KEYS */;
 
-INSERT INTO `mobile_message` (`id`, `receiver_id`, `sender_id`, `createTime`, `content`, `status`, `category`, `push`, `check`, `project_id`, `project_status`)
+INSERT INTO `mobile_message` (`id`, `receiver_id`, `sender_id`, `createTime`, `content`, `status`, `category`, `isPush`, `isCheck`, `project_id`, `project_status`)
 VALUES
-	(1,11,2,'2015-05-10 19:29:50','sfsa申请创建[dfasd]的项目。',1,21,2,2,24,1);
+	(1,11,2,'2015-05-10 22:57:33','sfsa申请创建[dfasd]的项目。',1,21,2,1,24,1);
 
 /*!40000 ALTER TABLE `mobile_message` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -624,7 +624,7 @@ VALUES
 	(1,1,'测试新闻1','测试测试测试测试测试测试测试测试测试','2015-05-01 17:06:25',5,0,'https://dn-publics.qbox.me/aroni-738302_640.jpg'),
 	(2,1,'测试新闻2','测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2测试新闻2','2015-05-01 17:07:09',256,0,'https://dn-publics.qbox.me/animals-731213_640.jpg'),
 	(3,1,'测试新闻3',' 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3 测试新闻3','2015-05-01 17:07:39',222,0,'https://dn-publics.qbox.me/flower-729513_640.jpg'),
-	(4,1,'测试新闻4','测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4','2015-05-01 17:08:02',222,0,'https://dn-publics.qbox.me/nature-73536_640.jpg'),
+	(4,1,'测试新闻4','测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4测试新闻4','2015-05-01 17:08:02',223,0,'https://dn-publics.qbox.me/nature-73536_640.jpg'),
 	(5,1,'测试新闻5','测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5测试新闻5','2015-05-01 17:08:21',22,0,'https://dn-publics.qbox.me/brimstone-721514_640.jpg'),
 	(6,1,'测试新闻6','测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6测试新闻6\n','2015-05-10 13:35:23',1,0,''),
 	(7,1,'测试新闻7','测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容测试新闻内容','2015-05-10 13:36:03',0,0,''),
@@ -1233,7 +1233,7 @@ VALUES
 	(8,1,1,1,1,'40bd001563085fc35165329ea1ff5c5ecbdbbeef','burgess','burgessfull','10132510232','2013','123','','','','','123','','','123','123','8',0,NULL),
 	(9,1,1,1,1,'ljy','ljy','lijianying','10112510204','2011','204','','','','','204@ecnu.edu.cn','','','18888888204','','',0,NULL),
 	(10,1,1,1,1,'40bd001563085fc35165329ea1ff5c5ecbdbbeef','ymy','yemengying','10112510219','2011','219','','','','','219@ecnu.edu.cn','','','18888888219','xxx','10',0,NULL),
-	(11,3,1,1,1,'teacher1','teacher1','teacher1','','2000','','教授','','','','teacher1@ecnu.edu.cn','','','','','650a5806705a7dba44405eacc977d583a2db00bb',0,NULL),
+	(11,3,1,1,1,'teacher1','teacher1','teacher1','','2000','','教授','','','','teacher1@ecnu.edu.cn','','','','','eb5b821c8022cc9b7ffc7c2bc0c554c30414ae04',0,NULL),
 	(12,3,1,1,1,'teacher2','teacher2','teacher2','','2000','','副教授','','','','teacher2@ecnu.edu.cn','','','','','',0,NULL),
 	(13,3,1,1,1,'teacher3','teacher3','teacher3','','2000','','副教授','','','','teacher3@ecnu.edu.cn','','','','','',0,NULL),
 	(21,3,1,1,1,'admin1','admin1','admin1','','1952','','科创中心管理员','','','','','','','','','0ea8807d05078a9197f0c27d734a316efe99e566',0,NULL);
