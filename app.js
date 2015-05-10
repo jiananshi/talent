@@ -5,7 +5,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var thunkify = require('thunkify');
 var config = require('./config');
-console.log(config);
 var sql = config.sql;
 
 //connect mysql, change  the information to yourself.
