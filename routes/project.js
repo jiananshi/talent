@@ -401,26 +401,26 @@ router.post('/add-item-student', function (req, res, next) {
 router.post('/add-item-school', function (req, res, next) {
 
     var db = req.db;
-    var userToken = req.query.token;
-    var teacher = req.query.teacher;
+    var userToken = req.body.token;
+    var teacher = req.body.teacher || 'teacher1';
 
-    var name = req.query.name || 'blank';
-    var source = req.query.source || 1;
-    var category = req.query.category || 1;
-    var aid = req.query.aid || 'blank';
-    var background = req.query.background || 'blank';
-    var describe = req.query.describe || 'blank';
-    var innovation = req.query.innovation || 'blank';
-    var plan = req.query.plan || 'blank';
-    var prospect = req.query.prospect || 'blank';
-    var budget = req.query.budget || 'blank';
-    var resourcerequired = req.query.resourcerequired || 'blank';
-    var member = req.query.member || [];
-    var mainMember = req.query.mainMember || {};
+    var name = req.body.name || 'blank';
+    var source = req.body.source || 1;
+    var category = req.body.category || 1;
+    var aid = req.body.aid || 'blank';
+    var background = req.body.background || 'blank';
+    var describe = req.body.describe || 'blank';
+    var innovation = req.body.innovation || 'blank';
+    var plan = req.body.plan || 'blank';
+    var prospect = req.body.prospect || 'blank';
+    var budget = req.body.budget || 'blank';
+    var resourcerequired = req.body.resourcerequired || 'blank';
+    var member = req.body.member || '[]';
+    var mainMember = req.body.mainMember || '{}';
     var newDate = new Date();
 
-    var startTimeStamp = req.query.startTime;
-    var endTimeStamp = req.query.endTime;
+    var startTimeStamp = req.body.startTime || 1430648492000;
+    var endTimeStamp = req.body.endTime || 1430648592000;
     newDate.setTime(startTimeStamp);
     var startTime = newDate.toLocaleString().replace(/T/, ' ').replace(/\..+/, '');
     newDate.setTime(endTimeStamp);
@@ -433,6 +433,10 @@ router.post('/add-item-school', function (req, res, next) {
 
     mainMember = JSON.parse(mainMember);
     member = JSON.parse(member);
+
+    console.log(userToken);
+    console.log(member);
+    console.log(mainMember);
 
     function onerror(err) {
         // log any uncaught errors

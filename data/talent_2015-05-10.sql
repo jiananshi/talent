@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.20)
 # Database: talent
-# Generation Time: 2015-05-10 05:48:17 +0000
+# Generation Time: 2015-05-10 11:30:38 +0000
 # ************************************************************
 
 
@@ -575,12 +575,26 @@ CREATE TABLE `mobile_message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `receiver_id` int(11) NOT NULL,
   `sender_id` int(11) NOT NULL,
-  `createtime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `createTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `content` varchar(255) NOT NULL,
   `status` int(11) NOT NULL,
+  `category` int(11) NOT NULL,
+  `push` int(11) DEFAULT NULL,
+  `check` int(11) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `project_status` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
+LOCK TABLES `mobile_message` WRITE;
+/*!40000 ALTER TABLE `mobile_message` DISABLE KEYS */;
+
+INSERT INTO `mobile_message` (`id`, `receiver_id`, `sender_id`, `createTime`, `content`, `status`, `category`, `push`, `check`, `project_id`, `project_status`)
+VALUES
+	(1,11,2,'2015-05-10 19:29:50','sfsa申请创建[dfasd]的项目。',1,21,2,2,24,1);
+
+/*!40000 ALTER TABLE `mobile_message` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table news
@@ -807,7 +821,8 @@ VALUES
 	(13,4,9,'2015-04-24 00:42:54',10,'随心之旅自由行定制系统','2015-03-31 00:42:43','2015-05-09 00:42:50',2,1,'软件工程','携程资助','出去玩需要制定旅行计划。','想去哪儿~基于谷歌地图为您绘制最佳自由行路线~','去哪儿？去啊！','系统发布','专利','10000','电脑',NULL,NULL,NULL,'智能定制计划',5,'研究生',2,0),
 	(17,4,7,'2015-04-28 10:40:43',1,'test','2015-04-28 02:29:46','2015-04-28 02:29:46',NULL,NULL,'','',NULL,'test',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'',5,'',1,100),
 	(18,1,0,'2015-04-28 10:56:43',2,'滑雪项目','2014-06-18 02:33:24','2014-06-18 02:33:24',NULL,1,'','爱丽自助','背景','undefined','创新','进度','计划','10000','实验室',NULL,NULL,NULL,'',0,'',0,0),
-	(19,1,1,'2015-04-28 10:57:24',2,'滑雪项目','2014-06-18 02:33:24','2014-06-18 02:33:24',NULL,1,'','爱丽自助','背景','undefined','创新','进度','计划','10000','实验室',NULL,NULL,NULL,'',0,'',0,0);
+	(19,1,1,'2015-04-28 10:57:24',2,'滑雪项目','2014-06-18 02:33:24','2014-06-18 02:33:24',NULL,1,'','爱丽自助','背景','undefined','创新','进度','计划','10000','实验室',NULL,NULL,NULL,'',0,'',0,0),
+	(24,2,1,'2015-05-10 19:29:50',1,'dfasd','2015-05-06 08:00:00','2015-05-07 08:00:00',NULL,2,'','dfafdas','dfasf','sadfds','fdsadfs','blank','blank','blank','blank',NULL,NULL,NULL,'',0,'',0,0);
 
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -947,7 +962,10 @@ VALUES
 	(40,19,11,2,'指导老师',NULL,0,NULL),
 	(41,19,1,1,'队长',NULL,0,NULL),
 	(42,19,1,3,'队员',NULL,0,NULL),
-	(43,19,2,3,'队员',NULL,0,NULL);
+	(43,19,2,3,'队员',NULL,0,NULL),
+	(50,24,11,2,'指导老师',NULL,0,NULL),
+	(51,24,2,1,'队长',NULL,0,NULL),
+	(52,24,4,3,'队员',NULL,0,NULL);
 
 /*!40000 ALTER TABLE `project_member` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1205,7 +1223,7 @@ LOCK TABLES `user` WRITE;
 
 INSERT INTO `user` (`user_id`, `user_grade_id`, `user_gender_id`, `department_id`, `major_id`, `user_password`, `user_name`, `user_fullname`, `user_studentnumber`, `user_admissionyear`, `user_idcardnumber`, `user_job`, `user_researchinterests`, `user_address`, `user_dormitory`, `user_email1`, `user_email2`, `user_qq`, `user_phone1`, `user_phone2`, `user_token`, `user_status`, `user_photo`)
 VALUES
-	(1,1,1,1,1,'1','axt','anxiaoting','10112510218','2011','218','xxx','xxx','xxx','xxx','218@ecnu.edu.cn','xxx','xxx','18888888218','xxx','bc058d41f1dce39d29fdb7fff3f08dd2b0540ff7',0,NULL),
+	(1,1,1,1,1,'1','axt','anxiaoting','10112510218','2011','218','xxx','xxx','xxx','xxx','218@ecnu.edu.cn','xxx','xxx','18888888218','xxx','b69bc794a2aafb21f60e3ff6173965d184756b3f',0,NULL),
 	(2,1,1,1,1,'zy','zy','zhouyue','10112510220','2011','220','','','','','220@ecnu.edu.cn','','','18888888220','','4cbf3502eab947f94ee4d14a2c884a6f109dea43',0,NULL),
 	(3,1,1,1,1,'yf','yf','yufang','10112510228','2011','228','','','','','280@ecnu.edu.cn','','','18888888228','','',0,NULL),
 	(4,1,1,1,1,'yhp','yhp','yuhaiping','10112510201','2011','201','','','','','201@ecnu.edu.cn','','','18888888201','','',0,NULL),
