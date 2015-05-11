@@ -453,7 +453,7 @@ router.post('/add-item-school', function (req, res, next) {
             return false;
         }
 
-        console.log(isUser);
+        console.log('isUser');
 
         var isTeacher = yield db.query('SELECT user_id FROM user WHERE user_fullname ="' + teacher + '"');
         if (isTeacher[0].length === 0) {
@@ -461,7 +461,7 @@ router.post('/add-item-school', function (req, res, next) {
             return false;
         }
 
-        console.log(isTeacher);
+        console.log('isTeacher');
 
         var insertPoject = yield db.query('INSERT INTO project SET ?', {
             project_category_id: category,
@@ -481,7 +481,7 @@ router.post('/add-item-school', function (req, res, next) {
             project_resourcerequired: resourcerequired
         });
 
-        console.log(insertPoject);
+        console.log('insertPoject');
 
         if (insertPoject[0].length === 0) {
             sendData(req, res, next, "上传数据失败，请稍后重试");
@@ -495,7 +495,7 @@ router.post('/add-item-school', function (req, res, next) {
             project_member_task: '指导老师'
         });
 
-        console.log(insertProjectTeacher);
+        console.log('insertProjectTeacher');
 
         var insertMainMember = yield db.query('INSERT INTO project_member SET ?', {
             project_id: insertPoject[0].insertId,
@@ -504,7 +504,7 @@ router.post('/add-item-school', function (req, res, next) {
             project_member_task: '队长'
         });
 
-        console.log(insertMainMember);
+        console.log('insertMainMember');
 
         var insertMain = [];
         for (var i = 0; i < member.length; i++) {
@@ -516,6 +516,8 @@ router.post('/add-item-school', function (req, res, next) {
             });
         }
 
+        console.log('insertMember');
+
         var insertMessage = yield db.query('INSERT INTO mobile_message SET ?', {
             "sender_id" : mainMember.id, //发送者的id
             "receiver_id" : isTeacher[0][0].user_id, //接受者id
@@ -524,14 +526,14 @@ router.post('/add-item-school', function (req, res, next) {
             "category": 21,
             //(1：学生申请加入项目，项目负责人得到消息 1.1：学生得到是否同意加入项目的消息 2：学生申请加入竞赛，竞赛负责人得到消息 2.1：学生得到是否允许加入竞赛的消息 3：学生申请学校项目，基地老师、管理员收到消息 3.1：学生得到管理员、基地老师回复的消息)
             "content": mainMember.name + '申请创建[' + name +']的项目。',
-            "push": 2, //(1: 已经推送 2:未推送)
+            "isPush": 2, //(1: 已经推送 2:未推送)
             "isCheck": 2, //(1: 已经查看 2:未查看),
             "createTime": (new Date()).toLocaleString(),
             "project_id" : insertPoject[0].insertId, //消息相关项目的ID,
             "project_status" : 1 //目前项目状态
         });
 
-        console.log(insertMessage);
+        console.log('insertMessage');
 
         var data = {
             status: true,

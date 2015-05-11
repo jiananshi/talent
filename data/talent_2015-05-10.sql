@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.20)
 # Database: talent
-# Generation Time: 2015-05-10 14:57:51 +0000
+# Generation Time: 2015-05-10 15:03:32 +0000
 # ************************************************************
 
 
@@ -591,7 +591,7 @@ LOCK TABLES `mobile_message` WRITE;
 
 INSERT INTO `mobile_message` (`id`, `receiver_id`, `sender_id`, `createTime`, `content`, `status`, `category`, `isPush`, `isCheck`, `project_id`, `project_status`)
 VALUES
-	(1,11,2,'2015-05-10 22:57:33','sfsa申请创建[dfasd]的项目。',1,21,2,1,24,1);
+	(1,11,2,'2015-05-10 23:03:17','小明申请创建[消息通信APP]的项目。',1,21,2,2,24,1);
 
 /*!40000 ALTER TABLE `mobile_message` ENABLE KEYS */;
 UNLOCK TABLES;
