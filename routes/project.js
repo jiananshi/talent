@@ -548,7 +548,7 @@ router.post('/add-item-school', function (req, res, next) {
 });
 
 //获取所有的分类名字
-router.get('/category', function (req, res) {
+router.get('/category', function (req, res, next) {
     var db = req.db;
     var data = {
         status: false,
