@@ -1,9 +1,34 @@
 //@GGICE
 var express = require('express');
-var router = express.Router();
 var co = require('co');
+var common = require('../model/common');
+var router = express.Router();
 
 router.get('/', function (req, res) {
+    var db = req.db,
+        token = req.query.token;
+
+    co(function *() {
+        var isUser = yield db.query('SELECT user_id FROM  user WHERE user_token = ?',[token]);
+        if (isUser[0].length === 0) {
+            sendData(req, res, '请重新登录');
+            return false;
+        }
+
+        var message = yield  db.query('SELECT * FROM mobile_message  WHERE receiver_id = ?', [
+            isUser[0][0].user_id]);
+        if (message[0].length === 0) {
+            sendData(req, res, '没有消息');
+        } else {
+            for(var i = 0 ; i < message[0].length; i++){
+                message[0][i].createTime = common.makeDate(message[0][i].createTime);
+            }
+            res.send(message[0]);
+        }
+    }).catch(onerror);
+});
+
+router.get('/push', function (req, res) {
     var db = req.db,
         token = req.query.token;
 
