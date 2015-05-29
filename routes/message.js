@@ -17,14 +17,11 @@ router.get('/', function (req, res) {
 
         var message = yield  db.query('SELECT * FROM mobile_message  WHERE receiver_id = ?', [
             isUser[0][0].user_id]);
-        if (message[0].length === 0) {
-            sendData(req, res, '没有消息');
-        } else {
+
             for(var i = 0 ; i < message[0].length; i++){
                 message[0][i].createTime = common.makeDate(message[0][i].createTime);
             }
             res.send(message[0]);
-        }
     }).catch(onerror);
 });
 
@@ -41,11 +38,8 @@ router.get('/push', function (req, res) {
 
         var message = yield  db.query('SELECT * FROM mobile_message  WHERE receiver_id = ? AND isCheck = ?', [
             isUser[0][0].user_id, 2]);
-        if (message[0].length === 0) {
-            sendData(req, res, '没有消息');
-        } else {
             res.send(message[0]);
-        }
+
     }).catch(onerror);
 });
 
