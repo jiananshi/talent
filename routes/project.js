@@ -447,6 +447,7 @@ router.post('/add-item-school', function (req, res, next) {
     }
 
     co(function *() {
+        //should turn back TODO
         var isUser = yield db.query('SELECT user_id FROM user WHERE user_token ="' + userToken + '"');
         if (isUser[0].length === 0) {
             sendData(req, res, next, "请重新登录");
@@ -496,10 +497,12 @@ router.post('/add-item-school', function (req, res, next) {
         });
 
         console.log('insertProjectTeacher');
+        //not strict TODO
+        var returnId = yield db.query('SELECT user_id FROM  user WHERE user_studentnumber = ?', [mainMember.id]);
 
         var insertMainMember = yield db.query('INSERT INTO project_member SET ?', {
             project_id: insertPoject[0].insertId,
-            user_id: mainMember.id,
+            user_id: returnId[0][0].user_id,
             project_member_role: 1,
             project_member_task: '队长'
         });
@@ -507,10 +510,13 @@ router.post('/add-item-school', function (req, res, next) {
         console.log('insertMainMember');
 
         var insertMain = [];
-        for (var i = 0; i < member.length; i++) {
+        console.log(member);
+        for (var i = 0, temId; i < member.length; i++) {
+            //not strict TODO
+            temId = yield db.query('SELECT user_id FROM  user WHERE user_studentnumber = ?', [member[i].id]);
             insertMain[i] = yield db.query('INSERT INTO project_member SET ?', {
                 project_id: insertPoject[0].insertId,
-                user_id: member[i].id,
+                user_id: temId[0][0].user_id,
                 project_member_role: 3,
                 project_member_task: '队员'
             });
@@ -519,7 +525,7 @@ router.post('/add-item-school', function (req, res, next) {
         console.log('insertMember');
 
         var insertMessage = yield db.query('INSERT INTO mobile_message SET ?', {
-            "sender_id" : mainMember.id, //发送者的id
+            "sender_id" : returnId[0][0].user_id, //发送者的id
             "receiver_id" : isTeacher[0][0].user_id, //接受者id
             "status": 1,
             //(1：等待答复，2：已经同意，3：已经拒绝，4：已经下架结束)
