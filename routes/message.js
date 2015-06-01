@@ -72,7 +72,7 @@ router.post('/push', function (req, res) {
     co(function *() {
         var isUser = yield db.query('SELECT user_id FROM  user WHERE user_token = ?', [token]);
         if (isUser[0].length === 0) {
-            sendPost(req, false, '请重新登录');
+            sendPost(res, false, '请重新登录');
             return false;
         }
 
