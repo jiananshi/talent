@@ -21,7 +21,6 @@ var connection = mysql.createPool({
 //thunk to support es6 generator-based such as co
 connection.query = thunkify(connection.query);
 
-
 var routes = require('./routes/index');
 var test = require('./routes/test');
 var project = require('./routes/project');
